@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Würzburg &amp; Bayern · MINT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --wine:#16335e; --wine-dk:#0e2244; --gold:#D99A1C; --gold-lt:#f0c45a;
+  --river:#7a8f3c;
+  --ink:#20242c; --muted:#6a6a72; --line:#e6e0d2;
+  --bg:#FBF8F1; --card:#ffffff;
+  --grad:linear-gradient(135deg,#0e2244 0%,#16335e 45%,#3a4f7a 72%,#D99A1C 125%);
+  --maxw:1180px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"Hanken Grotesk",system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.display{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;line-height:1.02;letter-spacing:-.02em}
+.mono{font-family:"JetBrains Mono",monospace}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+a{color:inherit}
+img{max-width:100%;display:block}
+
+/* ---------- TOP NAV / LANG ---------- */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;justify-content:space-between;
+  padding:14px 24px;backdrop-filter:blur(12px);background:rgba(251,247,240,.72);border-bottom:1px solid var(--line);transition:.3s}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:.82rem;letter-spacing:.16em;text-transform:uppercase}
+.brand .dot{width:11px;height:11px;border-radius:3px;background:var(--grad);box-shadow:0 0 0 3px rgba(0,0,0,.08)}
+.langset{display:flex;gap:4px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:4px}
+.langset button{font-family:"JetBrains Mono",monospace;font-weight:700;font-size:.72rem;letter-spacing:.05em;border:none;background:transparent;color:var(--muted);
+  padding:7px 13px;border-radius:999px;cursor:pointer;transition:.2s}
+.langset button.active{background:var(--grad);color:#fff;box-shadow:0 4px 14px rgba(0,0,0,.28)}
+.langset button:hover:not(.active){color:var(--ink)}
+
+/* ---------- HERO ---------- */
+.hero{position:relative;min-height:100vh;display:flex;align-items:flex-end;color:#fff;overflow:hidden;background:var(--grad)}
+.hero::before{content:"";position:absolute;inset:0;background:
+  radial-gradient(60% 50% at 80% 15%,rgba(232,184,96,.55),transparent 60%),
+  radial-gradient(50% 45% at 12% 85%,rgba(47,125,128,.5),transparent 60%);mix-blend-mode:screen}
+.hero::after{content:"";position:absolute;inset:0;opacity:.07;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.hero-grid{position:absolute;inset:0;opacity:.16;background-image:linear-gradient(rgba(255,255,255,.25) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.25) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(120% 90% at 50% 40%,#000,transparent 80%)}
+.hero-inner{position:relative;z-index:2;width:100%;padding:130px 0 64px}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:"JetBrains Mono",monospace;font-size:.74rem;letter-spacing:.22em;text-transform:uppercase;
+  background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);padding:9px 16px;border-radius:999px;backdrop-filter:blur(4px)}
+.hero h1{font-size:clamp(4.5rem,17vw,15rem);margin:.18em 0 .04em;text-shadow:0 8px 40px rgba(0,0,0,.25)}
+.hero .tagline{font-size:clamp(1.1rem,2.4vw,1.7rem);max-width:30ch;font-weight:500;opacity:.96}
+.hero-meta{display:flex;flex-wrap:wrap;gap:26px;margin-top:34px;font-family:"JetBrains Mono",monospace;font-size:.8rem;letter-spacing:.04em}
+.hero-meta span{display:flex;align-items:center;gap:8px;opacity:.92}
+.hero-meta b{color:var(--gold-lt);font-weight:700}
+.scrollcue{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);z-index:3;font-family:"JetBrains Mono",monospace;font-size:.66rem;letter-spacing:.3em;
+  text-transform:uppercase;opacity:.8;display:flex;flex-direction:column;align-items:center;gap:8px}
+.scrollcue .bar{width:1px;height:40px;background:linear-gradient(#fff,transparent);animation:drop 1.8s infinite}
+@keyframes drop{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* ---------- SECTION SHELL ---------- */
+section{padding:96px 0;position:relative}
+.kicker{font-family:"JetBrains Mono",monospace;font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;color:var(--wine);font-weight:700;display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.kicker::before{content:"";width:30px;height:2px;background:var(--gold)}
+.sec-head{font-size:clamp(2rem,5vw,3.4rem);margin-bottom:18px;max-width:18ch}
+.lead{font-size:clamp(1.02rem,1.8vw,1.22rem);color:var(--muted);max-width:62ch}
+.reveal{opacity:0;transform:translateY(34px);transition:.7s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* ---------- FACTS ---------- */
+#facts{background:linear-gradient(180deg,var(--bg),#fff)}
+.facts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:18px;margin-top:30px}
+.fact{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px 22px;position:relative;overflow:hidden;transition:.35s}
+.fact::before{content:"";position:absolute;left:0;top:0;height:100%;width:5px;background:var(--grad)}
+.fact:hover{transform:translateY(-6px);box-shadow:0 20px 40px -22px rgba(94,21,42,.5);border-color:transparent}
+.fact .num{font-family:"Bricolage Grotesque";font-weight:800;font-size:clamp(2rem,4vw,2.9rem);color:var(--wine);line-height:1}
+.fact .lab{font-family:"JetBrains Mono",monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:10px}
+.region-band{margin-top:26px;background:var(--grad);color:#fff;border-radius:22px;padding:34px;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:24px;align-items:center}
+.region-band .rb-title{font-family:"Bricolage Grotesque";font-weight:800;font-size:1.5rem;line-height:1.1}
+.region-band .rb-title small{display:block;font-family:"JetBrains Mono";font-weight:500;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;opacity:.85;margin-top:8px}
+.region-band .rb b{font-family:"Bricolage Grotesque";font-size:1.9rem;display:block}
+.region-band .rb span{font-family:"JetBrains Mono";font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;opacity:.9}
+
+/* ---------- TWO COL ---------- */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:54px;align-items:center}
+.media{border-radius:22px;overflow:hidden;border:1px solid var(--line);box-shadow:0 30px 60px -40px rgba(0,0,0,.5);aspect-ratio:4/3;position:relative;background:var(--grad)}
+.media iframe{width:100%;height:100%;border:0;display:block}
+.map-tag{position:absolute;left:16px;bottom:16px;z-index:3;background:rgba(255,255,255,.92);border-radius:12px;padding:10px 14px;font-family:"JetBrains Mono";font-size:.72rem;font-weight:700;letter-spacing:.06em;display:flex;gap:8px;align-items:center}
+
+/* ---------- TIMELINE ---------- */
+#history{background:#fff}
+.timeline{margin-top:40px;position:relative}
+.timeline::before{content:"";position:absolute;left:0;right:0;top:34px;height:2px;background:linear-gradient(90deg,var(--wine),var(--gold))}
+.tl-track{display:flex;gap:20px;overflow-x:auto;padding-bottom:18px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+.tl-track::-webkit-scrollbar{height:8px}.tl-track::-webkit-scrollbar-thumb{background:var(--line);border-radius:9px}
+.tl-item{scroll-snap-align:start;flex:0 0 250px;position:relative;padding-top:56px}
+.tl-item .dot{position:absolute;top:27px;left:0;width:16px;height:16px;border-radius:50%;background:#fff;border:4px solid var(--wine);box-shadow:0 0 0 5px rgba(142,40,67,.12)}
+.tl-item .yr{font-family:"Bricolage Grotesque";font-weight:800;font-size:1.7rem;color:var(--wine)}
+.tl-item p{font-size:.95rem;color:var(--muted);margin-top:6px}
+.hint{font-family:"JetBrains Mono";font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:14px;display:flex;gap:8px;align-items:center;opacity:.8}
+
+/* ---------- CARD GRID (culture/sport/facts) ---------- */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(248px,1fr));gap:22px;margin-top:38px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:28px;transition:.35s;position:relative;overflow:hidden}
+.card:hover{transform:translateY(-7px);box-shadow:0 26px 50px -30px rgba(94,21,42,.55);border-color:transparent}
+.card .ic{width:50px;height:50px;border-radius:14px;display:grid;place-items:center;font-size:1.5rem;background:linear-gradient(135deg,rgba(142,40,67,.12),rgba(198,138,46,.16));margin-bottom:16px}
+.card h3{font-size:1.18rem;margin-bottom:8px}
+.card p{font-size:.95rem;color:var(--muted)}
+
+/* ---------- MINT ---------- */
+#mint{background:var(--grad);color:#fff;overflow:hidden}
+#mint::after{content:"";position:absolute;inset:0;opacity:.08;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");pointer-events:none}
+#mint .kicker{color:var(--gold-lt)}#mint .kicker::before{background:var(--gold-lt)}
+#mint .lead{color:rgba(255,255,255,.86)}
+.mint-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px;margin-top:38px;position:relative;z-index:2}
+.mint-card{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:28px;backdrop-filter:blur(6px);transition:.35s}
+.mint-card:hover{background:rgba(255,255,255,.14);transform:translateY(-6px)}
+.mint-card .tag{font-family:"JetBrains Mono";font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-lt);font-weight:700}
+.mint-card h3{font-size:1.25rem;margin:10px 0 8px}
+.mint-card p{font-size:.94rem;color:rgba(255,255,255,.84)}
+
+/* ---------- CHARTS ---------- */
+#data{background:#fff}
+.chart-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:30px;margin-top:38px}
+.chart-box{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:26px}
+.chart-box h3{font-size:1.05rem;margin-bottom:6px}
+.chart-box p{font-size:.84rem;color:var(--muted);margin-bottom:14px}
+.chart-holder{position:relative;height:300px}
+
+/* ---------- VIDEO ---------- */
+#film{background:linear-gradient(180deg,#fff,var(--bg))}
+.video-card{margin-top:34px;border-radius:24px;overflow:hidden;position:relative;aspect-ratio:21/9;background:var(--grad);display:flex;align-items:center;justify-content:center;text-decoration:none;color:#fff;border:1px solid var(--line)}
+.video-card::after{content:"";position:absolute;inset:0;background:radial-gradient(50% 80% at 50% 50%,rgba(0,0,0,.15),rgba(0,0,0,.45))}
+.video-card .play{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:16px;transition:.3s}
+.video-card:hover .play{transform:scale(1.06)}
+.play .circ{width:84px;height:84px;border-radius:50%;background:rgba(255,255,255,.16);border:2px solid #fff;display:grid;place-items:center;backdrop-filter:blur(4px)}
+.play .circ svg{width:30px;height:30px;margin-left:5px;fill:#fff}
+.play .txt{font-family:"JetBrains Mono";letter-spacing:.16em;text-transform:uppercase;font-size:.78rem;font-weight:700}
+
+/* ---------- GALLERY ---------- */
+#gallery{background:var(--bg)}
+.gal{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:180px;gap:14px;margin-top:36px}
+.gal figure{position:relative;border-radius:16px;overflow:hidden;background:var(--grad);border:1px solid var(--line)}
+.gal figure.tall{grid-row:span 2}.gal figure.wide{grid-column:span 2}
+.gal img{width:100%;height:100%;object-fit:cover;transition:.6s}
+.gal figure:hover img{transform:scale(1.08)}
+.gal figcaption{position:absolute;left:0;right:0;bottom:0;padding:30px 14px 12px;color:#fff;font-size:.82rem;font-weight:600;
+  background:linear-gradient(transparent,rgba(0,0,0,.7));z-index:2}
+.gal .ph{position:absolute;inset:0;display:grid;place-items:center;color:rgba(255,255,255,.85);font-size:1.8rem}
+
+/* ---------- FOOTER ---------- */
+footer{background:var(--wine-dk);color:#fff;padding:60px 0 40px}
+footer .f-top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:24px;align-items:center;border-bottom:1px solid rgba(255,255,255,.16);padding-bottom:28px}
+footer h2{font-size:2rem}
+footer .partners{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+footer .partners a{font-family:"JetBrains Mono";font-size:.72rem;letter-spacing:.08em;border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:8px 14px;text-decoration:none;transition:.25s}
+footer .partners a:hover{background:#fff;color:var(--wine-dk)}
+footer .fine{margin-top:26px;font-size:.78rem;opacity:.7}
+
+@media(max-width:880px){
+  .split{grid-template-columns:1fr;gap:30px}
+  .chart-grid{grid-template-columns:1fr}
+  .region-band{grid-template-columns:1fr 1fr;gap:18px;text-align:left}
+  .gal{grid-template-columns:repeat(2,1fr)}
+  .hero-inner{padding-top:120px}
+}
+@media(max-width:520px){
+  .langset button{padding:6px 9px}
+  .brand span.full{display:none}
+  .gal{grid-template-columns:1fr}.gal figure.wide{grid-column:span 1}
+}
+</style>
+</head>
+<body data-theme="wuerzburg">
+
+<div class="topbar">
+  <div class="brand"><span class="dot"></span><span class="full">MINT&nbsp;·&nbsp;Würzburg / Bayern</span></div>
+  <div class="langset" id="langset">
+    <button data-lang="pl" class="active">PL</button>
+    <button data-lang="en">EN</button>
+    <button data-lang="de">DE</button>
+  </div>
+</div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-inner wrap">
+    <span class="eyebrow" data-t="eyebrow">Rheinland-Pfalz · Niemcy · Projekt MINT</span>
+    <h1>Würzburg</h1>
+    <p class="tagline" data-t="tagline">Małe miasto nad rzeką Nahe u stóp zamku Kyrburg.</p>
+    <div class="hero-meta">
+      <span data-t="m1">📍 Nahe · Hunsrück</span>
+      <span data-t="m2">👥 ok. <b>8 500</b> mieszk.</span>
+      <span data-t="m3">🏰 Kyrburg od <b>926</b></span>
+    </div>
+  </div>
+  <div class="scrollcue"><span data-t="scroll">Przewiń</span><span class="bar"></span></div>
+</header>
+
+<!-- FACTS -->
+<section id="facts">
+  <div class="wrap reveal">
+    <div class="kicker" data-t="k_facts">W pigułce</div>
+    <h2 class="sec-head" data-t="h_facts">Kirn w liczbach</h2>
+    <p class="lead" data-t="l_facts">Najmniejszy z partnerów projektu — ale z ogromną historią i charakterem.</p>
+    <div class="facts-grid" id="factsGrid"></div>
+    <div class="region-band">
+      <div class="rb-title" data-t="rb_title">Rheinland-Pfalz<small>Kraj związkowy / Bundesland</small></div>
+      <div class="rb"><b>13,4 M</b><span data-t="rb1">Mieszkańców</span></div>
+      <div class="rb"><b>München</b><span data-t="rb2">Stolica</span></div>
+      <div class="rb"><b>Nr.1</b><span data-t="rb3">wg powierzchni</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- MAP -->
+<section id="map">
+  <div class="wrap split">
+    <div class="reveal">
+      <div class="kicker" data-t="k_map">Gdzie to jest?</div>
+      <h2 class="sec-head" data-t="h_map">Na południowym skraju Hunsrücku</h2>
+      <p class="lead" data-t="l_map">Kirn leży w dolinie Nahe, ok. 35 km na południowy zachód od Bad Kreuznach i ok. 60 km od Moguncji. Otaczają je strome, zalesione wzgórza i winnice.</p>
+    </div>
+    <div class="reveal media">
+      <iframe loading="lazy" src="https://www.openstreetmap.org/export/embed.html?bbox=9.86%2C49.76%2C10.00%2C49.82&amp;layer=mapnik&amp;marker=49.7913%2C9.9534"></iframe>
+      <div class="map-tag">📍 49.79° N · 9.95° E</div>
+    </div>
+  </div>
+</section>
+
+<!-- HISTORY -->
+<section id="history">
+  <div class="wrap reveal">
+    <div class="kicker" data-t="k_hist">Oś czasu</div>
+    <h2 class="sec-head" data-t="h_hist">Ponad 1000 lat historii</h2>
+    <p class="lead" data-t="l_hist">Od średniowiecznego targowiska i siedziby dzikich i reńskich hrabiów po „miasto skóry" i nowoczesny przemysł tworzyw sztucznych.</p>
+    <div class="timeline"><div class="tl-track" id="tlTrack"></div></div>
+    <div class="hint" data-t="hint_scroll">← przesuń, aby zobaczyć więcej →</div>
+  </div>
+</section>
+
+<!-- CULTURE -->
+<section id="culture">
+  <div class="wrap reveal">
+    <div class="kicker" data-t="k_cult">Kultura &amp; zabytki</div>
+    <h2 class="sec-head" data-t="h_cult">Co warto zobaczyć</h2>
+    <div class="cards" id="cultGrid"></div>
+  </div>
+</section>
+
+<!-- SPORT -->
+<section id="sport" style="background:#fff">
+  <div class="wrap reveal">
+    <div class="kicker" data-t="k_sport">Sport &amp; natura</div>
+    <h2 class="sec-head" data-t="h_sport">Aktywnie w dolinie Nahe</h2>
+    <div class="cards" id="sportGrid"></div>
+  </div>
+</section>
+
+<!-- MINT -->
+<section id="mint">
+  <div class="wrap reveal">
+    <div class="kicker" data-t="k_mint">Spotlight MINT / STEM</div>
+    <h2 class="sec-head" data-t="h_mint">Nauka i technika z regionu</h2>
+    <p class="lead" data-t="l_mint">Region, który dał światu druk, materiały przyszłości i jeden z największych zakładów chemicznych.</p>
+    <div class="mint-grid" id="mintGrid"></div>
+  </div>
+</section>
+
+<!-- DATA -->
+<section id="data">
+  <div class="wrap reveal">
+    <div class="kicker" data-t="k_data">Dane &amp; wykresy</div>
+    <h2 class="sec-head" data-t="h_data">Liczby, które robią wrażenie</h2>
+    <div class="chart-grid">
+      <div class="chart-box">
+        <h3 data-t="c1_t">Miasta partnerskie — liczba mieszkańców</h3>
+        <p data-t="c1_p">Kirn to najmniejszy, ale równie ważny partner.</p>
+        <div class="chart-holder"><canvas id="chartPop"></canvas></div>
+      </div>
+      <div class="chart-box">
+        <h3 data-t="c2_t">Wino w Niemczech</h3>
+        <p data-t="c2_p">Udział Rheinland-Pfalz w niemieckiej produkcji wina.</p>
+        <div class="chart-holder"><canvas id="chartWine"></canvas></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FILM -->
+<section id="film">
+  <div class="wrap reveal">
+    <div class="kicker" data-t="k_film">Film</div>
+    <h2 class="sec-head" data-t="h_film">Zobacz region w ruchu</h2>
+    <p class="lead" data-t="l_film">Krótki spacer po Kirn, dolinie Nahe i Rheinland-Pfalz.</p>
+    <a class="video-card" id="videoCard" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=W%C3%BCrzburg+Residenz+Festung+Marienberg">
+      <div class="play"><span class="circ"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><span class="txt" data-t="watch">Otwórz na YouTube</span></div>
+    </a>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="wrap reveal">
+    <div class="kicker" data-t="k_gal">Galeria</div>
+    <h2 class="sec-head" data-t="h_gal">Obrazy regionu</h2>
+    <div class="gal" id="galGrid"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="f-top">
+      <h2 data-t="f_title">Projekt MINT · Kirn / Rheinland-Pfalz</h2>
+      <div class="langset" id="langset2">
+        <button data-lang="pl" class="active">PL</button>
+        <button data-lang="en">EN</button>
+        <button data-lang="de">DE</button>
+      </div>
+    </div>
+    <div class="partners">
+      <a href="01-kirn-rheinland-pfalz.html">Kirn · RLP</a>
+      <a href="02-duisburg-nrw.html">Duisburg · NRW</a>
+      <a href="03-wuerzburg-bayern.html">Würzburg · Bayern</a>
+      <a href="04-bialystok-podlasie.html">Białystok · Podlasie</a>
+      <a href="05-halle-sachsen-anhalt.html">Halle · Sachsen-Anhalt</a>
+    </div>
+    <p class="fine" data-t="f_fine">Treści edukacyjne. Zdjęcia: Wikimedia Commons. Mapa: © OpenStreetMap. Dane: m.in. urzędy statystyczne i Wikipedia.</p>
+  </div>
+</footer>
+
+<script>
+/* ============ CONTENT (PL / EN / DE) ============ */
+const T = {
+ pl:{
+  eyebrow:"Bawaria · Niemcy · Projekt MINT",
+  tagline:"Barokowe miasto wina nad Menem — i miejsce odkrycia promieni rentgenowskich.",
+  m1:"📍 Men · Frankonia", m2:"👥 ok. <b>132 000</b> mieszk.", m3:"🎓 uniwersytet od <b>1402</b>",
+  scroll:"Przewiń",
+  k_facts:"W pigułce", h_facts:"Würzburg w liczbach",
+  l_facts:"Jedno z najmłodszych dużych miast Niemiec — pełne studentów, baroku i wina.",
+  rb_title:"Bayern", rb_sub:"Wolne Państwo / Freistaat", rb1:"Mieszkańców", rb2:"Stolica", rb3:"wg powierzchni",
+  k_map:"Gdzie to jest?", h_map:"W sercu Dolnej Frankonii nad Menem",
+  l_map:"Würzburg leży w północnej Bawarii, w dolinie Menu otoczonej winnicami. To brama do „Krainy Wina” (Frankenland), ok. 120 km na płd.-wsch. od Frankfurtu.",
+  k_hist:"Oś czasu", h_hist:"Ponad 1300 lat historii",
+  l_hist:"Od celtyckiego grodu i siedziby książąt-biskupów po miasto nauki, które dało światu promienie X.",
+  hint_scroll:"← przesuń, aby zobaczyć więcej →",
+  k_cult:"Kultura & zabytki", h_cult:"Co warto zobaczyć",
+  k_sport:"Sport & natura", h_sport:"Aktywnie nad Menem",
+  k_mint:"Spotlight MINT / STEM", h_mint:"Nauka i technika z regionu",
+  l_mint:"Miasto, w którym odkryto promienie rentgenowskie i powstała pierwsza Nagroda Nobla z fizyki.",
+  k_data:"Dane & wykresy", h_data:"Liczby, które robią wrażenie",
+  c1_t:"Miasta partnerskie — liczba mieszkańców", c1_p:"Würzburg to średniej wielkości, tętniące życiem miasto studenckie.",
+  c2_t:"Miasto studentów", c2_p:"Studenci stanowią ok. jednej piątej mieszkańców — co piąta osoba studiuje.",
+  c2_a:"studenci", c2_b:"reszta",
+  k_film:"Film", h_film:"Zobacz region w ruchu", l_film:"Krótki spacer po Würzburgu, Rezydencji i winnicach Frankonii.", watch:"Otwórz na YouTube",
+  k_gal:"Galeria", h_gal:"Obrazy regionu",
+  f_title:"Projekt MINT · Würzburg / Bayern",
+  f_fine:"Treści edukacyjne. Zdjęcia: Wikimedia Commons. Mapa: © OpenStreetMap. Dane: m.in. urzędy statystyczne i Wikipedia.",
+  facts:[
+   {n:"~132 000",l:"Mieszkańców"},{n:"87,6",l:"km² powierzchni"},{n:"704",l:"Pierwsza wzmianka"},
+   {n:"1402",l:"Uniwersytet"},{n:"~28 000",l:"Studentów"},{n:"1981",l:"Rezydencja UNESCO"}
+  ],
+  timeline:[
+   {y:"~1000 p.n.e.",t:"Na wzgórzu Marienberg istnieje celtycki gród obronny."},
+   {y:"704",t:"Pierwsza wzmianka o „Uburzis” — początki miasta."},
+   {y:"1030",t:"Rozpoczęto budowę katedry św. Kiliana (Kiliansdom)."},
+   {y:"1402",t:"Powstaje uniwersytet — najstarszy w Bawarii."},
+   {y:"1631",t:"Wojna trzydziestoletnia: miasto zajmują wojska szwedzkie."},
+   {y:"1720",t:"Balthasar Neumann zaczyna budowę barokowej Rezydencji."},
+   {y:"1895",t:"Wilhelm Röntgen odkrywa tu promienie X (rentgenowskie)."},
+   {y:"1945",t:"16 marca centrum miasta niszczy nalot — później odbudowa."},
+   {y:"1981",t:"Rezydencja wpisana na listę światowego dziedzictwa UNESCO."}
+  ],
+  culture:[
+   {i:"🏛️",h:"Rezydencja (UNESCO)",p:"Arcydzieło baroku Balthasara Neumanna z największym sklepionym freskiem świata autorstwa Tiepola."},
+   {i:"🏰",h:"Twierdza Marienberg",p:"Górująca nad miastem forteca — przez wieki siedziba książąt-biskupów, dziś Muzeum Frankonii."},
+   {i:"🌉",h:"Stary Most nad Menem",p:"Kamienny most z figurami świętych. Miejscowy zwyczaj „Brückenschoppen” to lampka wina na moście."},
+   {i:"⛪",h:"Kiliansdom",p:"Czwarta co do wielkości romańska katedra w Niemczech, poświęcona św. Kilianowi."},
+   {i:"🍷",h:"Wino frankońskie",p:"Słynny „Frankenwein” w charakterystycznej okrągłej butelce Bocksbeutel — winnice rosną w samym mieście."},
+   {i:"🥨",h:"Kuchnia frankońska",p:"Pieczeń, knedle i lokalne wina — serce frankońskiej gościnności."}
+  ],
+  sport:[
+   {i:"🏀",h:"Würzburg Baskets",p:"Tu zaczynał Dirk Nowitzki — niemiecka legenda NBA i mistrz świata koszykówki."},
+   {i:"⚽",h:"Würzburger Kickers",p:"Tradycyjny klub piłkarski miasta z licznymi wiernymi kibicami."},
+   {i:"🚣",h:"Wiosła i żagle na Menie",p:"Men to świetne miejsce na wioślarstwo, żeglarstwo i rejsy."},
+   {i:"🚴",h:"Main-Radweg",p:"Jedna z najpopularniejszych tras rowerowych Niemiec wiedzie tędy wzdłuż rzeki."}
+  ],
+  mint:[
+   {tag:"Fizyka / Medycyna",h:"Promienie Röntgena",p:"W 1895 r. Wilhelm Conrad Röntgen odkrył tu promienie X — i otrzymał pierwszą w historii Nagrodę Nobla z fizyki (1901)."},
+   {tag:"Inżynieria / Architektura",h:"Schody Neumanna",p:"Sklepienie nad klatką schodową Rezydencji nie ma podpór — i przetrwało nawet bombardowanie w 1945 r."},
+   {tag:"Nauka / Badania",h:"Uniwersytet (JMU)",p:"Najstarszy uniwersytet Bawarii, silny w medycynie, fizyce i biologii — kilka Nagród Nobla."}
+  ],
+  gallery:[
+   {f:"Würzburg Residenz.jpg",c:"Rezydencja w Würzburgu",cls:"wide"},
+   {f:"Festung Marienberg Würzburg.jpg",c:"Twierdza Marienberg",cls:""},
+   {f:"Alte Mainbrücke Würzburg.jpg",c:"Stary Most nad Menem",cls:"tall"},
+   {f:"Würzburg.jpg",c:"Panorama Würzburga",cls:""},
+   {f:"Würzburger Stein.jpg",c:"Winnice Würzburger Stein",cls:""},
+   {f:"Würzburg Dom.jpg",c:"Katedra św. Kiliana",cls:"wide"}
+  ]
+ },
+
+ en:{
+  eyebrow:"Bavaria · Germany · MINT Project",
+  tagline:"A baroque wine city on the river Main — and the birthplace of the X-ray.",
+  m1:"📍 Main · Franconia", m2:"👥 approx. <b>132,000</b> people", m3:"🎓 university since <b>1402</b>",
+  scroll:"Scroll",
+  k_facts:"In a nutshell", h_facts:"Würzburg in numbers",
+  l_facts:"One of Germany's youngest big cities — full of students, baroque and wine.",
+  rb_title:"Bayern", rb_sub:"Free State / Freistaat", rb1:"Inhabitants", rb2:"Capital", rb3:"by area",
+  k_map:"Where is it?", h_map:"In the heart of Lower Franconia on the Main",
+  l_map:"Würzburg lies in northern Bavaria, in the Main valley surrounded by vineyards. It is the gateway to Franconia's wine country, about 120 km south-east of Frankfurt.",
+  k_hist:"Timeline", h_hist:"Over 1,300 years of history",
+  l_hist:"From a Celtic hillfort and seat of prince-bishops to a city of science that gave the world the X-ray.",
+  hint_scroll:"← swipe to see more →",
+  k_cult:"Culture & sights", h_cult:"What to see",
+  k_sport:"Sport & nature", h_sport:"Active on the Main",
+  k_mint:"MINT / STEM spotlight", h_mint:"Science & technology from the region",
+  l_mint:"The city where X-rays were discovered and the first-ever Nobel Prize in Physics was born.",
+  k_data:"Data & charts", h_data:"Numbers that impress",
+  c1_t:"Partner cities — population", c1_p:"Würzburg is a mid-sized, vibrant student city.",
+  c2_t:"A student city", c2_p:"Students make up about a fifth of all residents — one in five is studying.",
+  c2_a:"students", c2_b:"the rest",
+  k_film:"Film", h_film:"See the region in motion", l_film:"A short tour of Würzburg, the Residence and the Franconian vineyards.", watch:"Open on YouTube",
+  k_gal:"Gallery", h_gal:"Images of the region",
+  f_title:"MINT Project · Würzburg / Bayern",
+  f_fine:"Educational content. Photos: Wikimedia Commons. Map: © OpenStreetMap. Data: incl. statistical offices and Wikipedia.",
+  facts:[
+   {n:"~132,000",l:"Inhabitants"},{n:"87.6",l:"km² area"},{n:"704",l:"First mention"},
+   {n:"1402",l:"University"},{n:"~28,000",l:"Students"},{n:"1981",l:"Residence UNESCO"}
+  ],
+  timeline:[
+   {y:"~1000 BC",t:"A Celtic hillfort stands on the Marienberg hill."},
+   {y:"704",t:"First mention as „Uburzis” — the beginnings of the town."},
+   {y:"1030",t:"Construction of St Kilian's Cathedral (Kiliansdom) begins."},
+   {y:"1402",t:"A university is founded — the oldest in Bavaria."},
+   {y:"1631",t:"Thirty Years' War: Swedish troops occupy the city."},
+   {y:"1720",t:"Balthasar Neumann begins building the baroque Residence."},
+   {y:"1895",t:"Wilhelm Röntgen discovers X-rays here."},
+   {y:"1945",t:"On 16 March an air raid destroys the centre — later rebuilt."},
+   {y:"1981",t:"The Residence is added to the UNESCO World Heritage list."}
+  ],
+  culture:[
+   {i:"🏛️",h:"The Residence (UNESCO)",p:"A baroque masterpiece by Balthasar Neumann, with the largest vaulted ceiling fresco in the world by Tiepolo."},
+   {i:"🏰",h:"Marienberg Fortress",p:"A hilltop fortress towering over the city — for centuries the seat of prince-bishops, today the Museum of Franconia."},
+   {i:"🌉",h:"Old Main Bridge",p:"A stone bridge lined with statues of saints. The local „Brückenschoppen” ritual is a glass of wine on the bridge."},
+   {i:"⛪",h:"Kiliansdom",p:"Germany's fourth-largest Romanesque cathedral, dedicated to St Kilian."},
+   {i:"🍷",h:"Franconian wine",p:"The famous „Frankenwein” in its round Bocksbeutel bottle — vineyards grow right inside the city."},
+   {i:"🥨",h:"Franconian cuisine",p:"Roasts, dumplings and local wines — the heart of Franconian hospitality."}
+  ],
+  sport:[
+   {i:"🏀",h:"Würzburg Baskets",p:"Where Dirk Nowitzki started out — Germany's NBA legend and basketball world champion."},
+   {i:"⚽",h:"Würzburger Kickers",p:"The city's traditional football club with a loyal fan base."},
+   {i:"🚣",h:"Rowing & sailing on the Main",p:"The Main is great for rowing, sailing and boat trips."},
+   {i:"🚴",h:"Main Cycle Path",p:"One of Germany's most popular cycle routes runs right along the river here."}
+  ],
+  mint:[
+   {tag:"Physics / Medicine",h:"Röntgen's X-rays",p:"In 1895 Wilhelm Conrad Röntgen discovered X-rays here — and won the very first Nobel Prize in Physics (1901)."},
+   {tag:"Engineering / Architecture",h:"Neumann's staircase",p:"The Residence's vaulted staircase has no supporting pillars — and even survived the 1945 bombing."},
+   {tag:"Science / Research",h:"University (JMU)",p:"Bavaria's oldest university, strong in medicine, physics and biology — home to several Nobel laureates."}
+  ],
+  gallery:[
+   {f:"Würzburg Residenz.jpg",c:"The Würzburg Residence",cls:"wide"},
+   {f:"Festung Marienberg Würzburg.jpg",c:"Marienberg Fortress",cls:""},
+   {f:"Alte Mainbrücke Würzburg.jpg",c:"Old Main Bridge",cls:"tall"},
+   {f:"Würzburg.jpg",c:"Würzburg skyline",cls:""},
+   {f:"Würzburger Stein.jpg",c:"Würzburger Stein vineyards",cls:""},
+   {f:"Würzburg Dom.jpg",c:"St Kilian's Cathedral",cls:"wide"}
+  ]
+ },
+
+ de:{
+  eyebrow:"Bayern · Deutschland · MINT-Projekt",
+  tagline:"Eine barocke Weinstadt am Main — und der Geburtsort der Röntgenstrahlen.",
+  m1:"📍 Main · Franken", m2:"👥 ca. <b>132.000</b> Einw.", m3:"🎓 Universität seit <b>1402</b>",
+  scroll:"Scrollen",
+  k_facts:"Auf einen Blick", h_facts:"Würzburg in Zahlen",
+  l_facts:"Eine der jüngsten Großstädte Deutschlands — voller Studierender, Barock und Wein.",
+  rb_title:"Bayern", rb_sub:"Freistaat", rb1:"Einwohner", rb2:"Hauptstadt", rb3:"nach Fläche",
+  k_map:"Wo liegt das?", h_map:"Im Herzen Unterfrankens am Main",
+  l_map:"Würzburg liegt im Norden Bayerns, im von Weinbergen umgebenen Maintal. Es ist das Tor zum Frankenland, rund 120 km südöstlich von Frankfurt.",
+  k_hist:"Zeitstrahl", h_hist:"Über 1.300 Jahre Geschichte",
+  l_hist:"Von einer keltischen Fliehburg und dem Sitz der Fürstbischöfe zur Wissenschaftsstadt, die der Welt die Röntgenstrahlen schenkte.",
+  hint_scroll:"← wischen für mehr →",
+  k_cult:"Kultur & Sehenswürdigkeiten", h_cult:"Was man sehen sollte",
+  k_sport:"Sport & Natur", h_sport:"Aktiv am Main",
+  k_mint:"MINT-Spotlight", h_mint:"Wissenschaft & Technik aus der Region",
+  l_mint:"Die Stadt, in der die Röntgenstrahlen entdeckt wurden und der erste Physik-Nobelpreis seinen Ursprung hat.",
+  k_data:"Daten & Diagramme", h_data:"Zahlen, die beeindrucken",
+  c1_t:"Partnerstädte — Einwohnerzahl", c1_p:"Würzburg ist eine mittelgroße, lebendige Studentenstadt.",
+  c2_t:"Eine Studentenstadt", c2_p:"Studierende machen rund ein Fünftel der Einwohner aus — jede fünfte Person studiert.",
+  c2_a:"Studierende", c2_b:"übrige",
+  k_film:"Film", h_film:"Die Region in Bewegung", l_film:"Ein kurzer Rundgang durch Würzburg, die Residenz und die fränkischen Weinberge.", watch:"Auf YouTube öffnen",
+  k_gal:"Galerie", h_gal:"Bilder der Region",
+  f_title:"MINT-Projekt · Würzburg / Bayern",
+  f_fine:"Bildungsinhalte. Fotos: Wikimedia Commons. Karte: © OpenStreetMap. Daten: u. a. statistische Ämter und Wikipedia.",
+  facts:[
+   {n:"~132.000",l:"Einwohner"},{n:"87,6",l:"km² Fläche"},{n:"704",l:"Erste Erwähnung"},
+   {n:"1402",l:"Universität"},{n:"~28.000",l:"Studierende"},{n:"1981",l:"Residenz UNESCO"}
+  ],
+  timeline:[
+   {y:"~1000 v.Chr.",t:"Auf dem Marienberg steht eine keltische Fliehburg."},
+   {y:"704",t:"Erste Erwähnung als „Uburzis” — die Anfänge der Stadt."},
+   {y:"1030",t:"Der Bau des Kiliansdoms beginnt."},
+   {y:"1402",t:"Eine Universität wird gegründet — die älteste Bayerns."},
+   {y:"1631",t:"Dreißigjähriger Krieg: schwedische Truppen besetzen die Stadt."},
+   {y:"1720",t:"Balthasar Neumann beginnt den Bau der barocken Residenz."},
+   {y:"1895",t:"Wilhelm Röntgen entdeckt hier die Röntgenstrahlen."},
+   {y:"1945",t:"Am 16. März zerstört ein Luftangriff die Altstadt — später Wiederaufbau."},
+   {y:"1981",t:"Die Residenz wird UNESCO-Weltkulturerbe."}
+  ],
+  culture:[
+   {i:"🏛️",h:"Die Residenz (UNESCO)",p:"Ein Meisterwerk des Barock von Balthasar Neumann, mit dem größten zusammenhängenden Deckenfresko der Welt von Tiepolo."},
+   {i:"🏰",h:"Festung Marienberg",p:"Eine Festung hoch über der Stadt — jahrhundertelang Sitz der Fürstbischöfe, heute Museum für Franken."},
+   {i:"🌉",h:"Alte Mainbrücke",p:"Eine Steinbrücke mit Heiligenfiguren. Der „Brückenschoppen” ist ein Glas Wein auf der Brücke."},
+   {i:"⛪",h:"Kiliansdom",p:"Der viertgrößte romanische Dom Deutschlands, dem heiligen Kilian geweiht."},
+   {i:"🍷",h:"Frankenwein",p:"Der berühmte Frankenwein in der runden Bocksbeutel-Flasche — die Weinberge wachsen mitten in der Stadt."},
+   {i:"🥨",h:"Fränkische Küche",p:"Braten, Klöße und lokale Weine — das Herz der fränkischen Gastlichkeit."}
+  ],
+  sport:[
+   {i:"🏀",h:"Würzburg Baskets",p:"Hier begann Dirk Nowitzki — die deutsche NBA-Legende und Basketball-Weltmeister."},
+   {i:"⚽",h:"Würzburger Kickers",p:"Der Traditions-Fußballverein der Stadt mit treuen Fans."},
+   {i:"🚣",h:"Rudern & Segeln auf dem Main",p:"Der Main eignet sich bestens für Rudern, Segeln und Bootsfahrten."},
+   {i:"🚴",h:"Main-Radweg",p:"Einer der beliebtesten Radwege Deutschlands führt hier am Fluss entlang."}
+  ],
+  mint:[
+   {tag:"Physik / Medizin",h:"Röntgenstrahlen",p:"1895 entdeckte Wilhelm Conrad Röntgen hier die X-Strahlen — und erhielt den allerersten Nobelpreis für Physik (1901)."},
+   {tag:"Technik / Architektur",h:"Neumanns Treppenhaus",p:"Das gewölbte Treppenhaus der Residenz kommt ohne Stützpfeiler aus — und überstand sogar die Bombardierung 1945."},
+   {tag:"Wissenschaft / Forschung",h:"Universität (JMU)",p:"Bayerns älteste Universität, stark in Medizin, Physik und Biologie — mit mehreren Nobelpreisträgern."}
+  ],
+  gallery:[
+   {f:"Würzburg Residenz.jpg",c:"Würzburger Residenz",cls:"wide"},
+   {f:"Festung Marienberg Würzburg.jpg",c:"Festung Marienberg",cls:""},
+   {f:"Alte Mainbrücke Würzburg.jpg",c:"Alte Mainbrücke",cls:"tall"},
+   {f:"Würzburg.jpg",c:"Würzburg von oben",cls:""},
+   {f:"Würzburger Stein.jpg",c:"Weinlage Würzburger Stein",cls:""},
+   {f:"Würzburg Dom.jpg",c:"Kiliansdom",cls:"wide"}
+  ]
+ }
+};
+
+/* ============ CHART DATA ============ */
+const POP = {labels:["Kirn","Würzburg","Halle","Białystok","Duisburg"], data:[8500,132000,243000,290000,502000]};
+const C2VALS=[21,79];   /* second chart values */
+const SELF=1;           /* index of this city in POP */
+
+/* ============ RENDER ENGINE ============ */
+let popChart, wineChart, current="pl";
+const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
+const wikimedia=f=>"https://commons.wikimedia.org/wiki/Special:FilePath/"+encodeURIComponent(f)+"?width=800";
+
+function setStatic(lang){
+  $$("[data-t]").forEach(el=>{
+    const k=el.getAttribute("data-t");
+    if(T[lang][k]!==undefined) el.innerHTML=T[lang][k];
+  });
+  $(".region-band .rb-title").innerHTML=T[lang].rb_title+'<small>'+T[lang].rb_sub+'</small>';
+}
+
+function renderFacts(lang){
+  $("#factsGrid").innerHTML=T[lang].facts.map(f=>
+    `<div class="fact"><div class="num" data-count="${f.n}">${f.n}</div><div class="lab">${f.l}</div></div>`).join("");
+}
+function renderTimeline(lang){
+  $("#tlTrack").innerHTML=T[lang].timeline.map(e=>
+    `<div class="tl-item"><span class="dot"></span><div class="yr">${e.y}</div><p>${e.t}</p></div>`).join("");
+}
+function renderCards(id,arr){
+  $(id).innerHTML=arr.map(c=>
+    `<div class="card"><div class="ic">${c.i}</div><h3>${c.h}</h3><p>${c.p}</p></div>`).join("");
+}
+function renderMint(lang){
+  $("#mintGrid").innerHTML=T[lang].mint.map(c=>
+    `<div class="mint-card"><div class="tag">${c.tag}</div><h3>${c.h}</h3><p>${c.p}</p></div>`).join("");
+}
+function renderGallery(lang){
+  $("#galGrid").innerHTML=T[lang].gallery.map(g=>
+    `<figure class="${g.cls}"><div class="ph">🖼️</div>
+       <img loading="lazy" alt="${g.c}" src="${wikimedia(g.f)}" onload="this.previousElementSibling.style.display='none'" onerror="this.style.display='none'">
+       <figcaption>${g.c}</figcaption></figure>`).join("");
+}
+
+/* count-up (locale-aware, handles 8 500 / 8.500 / 16,53) */
+function parseNum(s){
+  s=s.replace(/\s|\u00a0/g,"");
+  const lastSep=Math.max(s.lastIndexOf(","),s.lastIndexOf("."));
+  let dec=0;
+  if(lastSep>-1){
+    const after=s.length-lastSep-1, sepChar=s[lastSep];
+    if(after===1||after===2){ dec=after;
+      s=s.split("").map(c=> c===sepChar?".":(c===","||c==="."?"":c)).join("");
+    } else { s=s.replace(/[.,]/g,""); }
+  }
+  return {value:parseFloat(s),dec};
+}
+function animateCount(el){
+  if(el.dataset.done==="1")return;
+  const raw=el.getAttribute("data-count");
+  const m=raw.match(/[\d][\d .,\u00a0]*\d|\d/);
+  if(!m){return}
+  el.dataset.done="1";
+  const token=m[0], prefix=raw.slice(0,m.index), suffix=raw.slice(m.index+token.length);
+  const {value:target,dec}=parseNum(token);
+  if(isNaN(target)){el.innerHTML=raw;return}
+  const grp=current==="de"?".":(current==="pl"?"\u00a0":","), decSep=current==="en"?".":",";
+  function fmt(v){ const p=v.toFixed(dec).split("."); p[0]=p[0].replace(/\B(?=(\d{3})+(?!\d))/g,grp); return dec>0?p[0]+decSep+p[1]:p[0]; }
+  let start=null; const dur=1300;
+  function step(ts){ if(!start)start=ts; const pr=Math.min((ts-start)/dur,1); const e=1-Math.pow(1-pr,3);
+    el.innerHTML=prefix+fmt(target*e)+suffix;
+    if(pr<1)requestAnimationFrame(step); else el.innerHTML=raw;
+  }
+  requestAnimationFrame(step);
+}
+
+function buildCharts(lang){
+  const cs=getComputedStyle(document.body);
+  const accent=(cs.getPropertyValue("--wine").trim())||"#8E2843";
+  const gold=(cs.getPropertyValue("--gold").trim())||"#C68A2E";
+  const line=(cs.getPropertyValue("--line").trim())||"#e7ddd0";
+  if(popChart)popChart.destroy(); if(wineChart)wineChart.destroy();
+  const barColors=POP.labels.map((_,i)=>i===SELF?accent:gold);
+  popChart=new Chart($("#chartPop"),{type:"bar",
+    data:{labels:POP.labels,datasets:[{data:POP.data,backgroundColor:barColors,borderRadius:8,maxBarThickness:46}]},
+    options:{indexAxis:"y",plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.parsed.x.toLocaleString()}}},
+      scales:{x:{grid:{color:"#eee"},ticks:{font:{family:"JetBrains Mono",size:10}}},y:{grid:{display:false},ticks:{font:{family:"JetBrains Mono",size:12,weight:"700"}}}},
+      responsive:true,maintainAspectRatio:false}});
+  wineChart=new Chart($("#chartWine"),{type:"doughnut",
+    data:{labels:[T[lang].c2_a,T[lang].c2_b],datasets:[{data:C2VALS,backgroundColor:[accent,line],borderWidth:0}]},
+    options:{cutout:"66%",plugins:{legend:{position:"bottom",labels:{font:{family:"JetBrains Mono",size:11},boxWidth:12}}},
+      responsive:true,maintainAspectRatio:false}});
+}
+
+function setLang(lang){
+  current=lang; document.documentElement.lang=lang;
+  setStatic(lang); renderFacts(lang); renderTimeline(lang);
+  renderCards("#cultGrid",T[lang].culture); renderCards("#sportGrid",T[lang].sport);
+  renderMint(lang); renderGallery(lang); buildCharts(lang);
+  $$(".langset").forEach(set=>set.querySelectorAll("button").forEach(b=>b.classList.toggle("active",b.dataset.lang===lang)));
+  // re-run counters for any facts in view
+  $$("#factsGrid .num").forEach(el=>{ if(el.getBoundingClientRect().top<window.innerHeight) animateCount(el); });
+}
+
+/* events */
+$$(".langset button").forEach(b=>b.addEventListener("click",()=>setLang(b.dataset.lang)));
+
+/* reveal + counters on scroll */
+const io=new IntersectionObserver((ents)=>{
+  ents.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add("in");
+    e.target.querySelectorAll&&e.target.querySelectorAll("[data-count]").forEach(animateCount);
+    io.unobserve(e.target);} });
+},{threshold:.15});
+
+window.addEventListener("DOMContentLoaded",()=>{
+  setLang("pl");
+  $$(".reveal").forEach(el=>io.observe(el));
+  const fo=new IntersectionObserver((ents)=>{ents.forEach(e=>{if(e.isIntersecting){e.target.querySelectorAll("[data-count]").forEach(animateCount);fo.unobserve(e.target)}})},{threshold:.3});
+  fo.observe($("#factsGrid"));
+});
+</script>
+</body>
+</html>

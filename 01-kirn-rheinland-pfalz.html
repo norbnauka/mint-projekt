@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kirn &amp; Rheinland-Pfalz · MINT</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --wine:#8E2843; --wine-dk:#5e152a; --gold:#C68A2E; --gold-lt:#e8b860;
+  --river:#2f7d80;
+  --ink:#241a16; --muted:#6f635c; --line:#e7ddd0;
+  --bg:#FBF7F0; --card:#ffffff;
+  --grad:linear-gradient(135deg,#5e152a 0%,#8E2843 42%,#b04a2e 78%,#C68A2E 120%);
+  --maxw:1180px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:"Hanken Grotesk",system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+h1,h2,h3,.display{font-family:"Bricolage Grotesque",sans-serif;font-weight:800;line-height:1.02;letter-spacing:-.02em}
+.mono{font-family:"JetBrains Mono",monospace}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+a{color:inherit}
+img{max-width:100%;display:block}
+
+/* ---------- TOP NAV / LANG ---------- */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;align-items:center;justify-content:space-between;
+  padding:14px 24px;backdrop-filter:blur(12px);background:rgba(251,247,240,.72);border-bottom:1px solid var(--line);transition:.3s}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:.82rem;letter-spacing:.16em;text-transform:uppercase}
+.brand .dot{width:11px;height:11px;border-radius:3px;background:var(--grad);box-shadow:0 0 0 3px rgba(0,0,0,.08)}
+.langset{display:flex;gap:4px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:4px}
+.langset button{font-family:"JetBrains Mono",monospace;font-weight:700;font-size:.72rem;letter-spacing:.05em;border:none;background:transparent;color:var(--muted);
+  padding:7px 13px;border-radius:999px;cursor:pointer;transition:.2s}
+.langset button.active{background:var(--grad);color:#fff;box-shadow:0 4px 14px rgba(0,0,0,.28)}
+.langset button:hover:not(.active){color:var(--ink)}
+
+/* ---------- HERO ---------- */
+.hero{position:relative;min-height:100vh;display:flex;align-items:flex-end;color:#fff;overflow:hidden;background:var(--grad)}
+.hero::before{content:"";position:absolute;inset:0;background:
+  radial-gradient(60% 50% at 80% 15%,rgba(232,184,96,.55),transparent 60%),
+  radial-gradient(50% 45% at 12% 85%,rgba(47,125,128,.5),transparent 60%);mix-blend-mode:screen}
+.hero::after{content:"";position:absolute;inset:0;opacity:.07;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+.hero-grid{position:absolute;inset:0;opacity:.16;background-image:linear-gradient(rgba(255,255,255,.25) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.25) 1px,transparent 1px);background-size:60px 60px;mask-image:radial-gradient(120% 90% at 50% 40%,#000,transparent 80%)}
+.hero-inner{position:relative;z-index:2;width:100%;padding:130px 0 64px}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:"JetBrains Mono",monospace;font-size:.74rem;letter-spacing:.22em;text-transform:uppercase;
+  background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);padding:9px 16px;border-radius:999px;backdrop-filter:blur(4px)}
+.hero h1{font-size:clamp(4.5rem,17vw,15rem);margin:.18em 0 .04em;text-shadow:0 8px 40px rgba(0,0,0,.25)}
+.hero .tagline{font-size:clamp(1.1rem,2.4vw,1.7rem);max-width:30ch;font-weight:500;opacity:.96}
+.hero-meta{display:flex;flex-wrap:wrap;gap:26px;margin-top:34px;font-family:"JetBrains Mono",monospace;font-size:.8rem;letter-spacing:.04em}
+.hero-meta span{display:flex;align-items:center;gap:8px;opacity:.92}
+.hero-meta b{color:var(--gold-lt);font-weight:700}
+.scrollcue{position:absolute;bottom:26px;left:50%;transform:translateX(-50%);z-index:3;font-family:"JetBrains Mono",monospace;font-size:.66rem;letter-spacing:.3em;
+  text-transform:uppercase;opacity:.8;display:flex;flex-direction:column;align-items:center;gap:8px}
+.scrollcue .bar{width:1px;height:40px;background:linear-gradient(#fff,transparent);animation:drop 1.8s infinite}
+@keyframes drop{0%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}51%{transform:scaleY(1);transform-origin:bottom}100%{transform:scaleY(0);transform-origin:bottom}}
+
+/* ---------- SECTION SHELL ---------- */
+section{padding:96px 0;position:relative}
+.kicker{font-family:"JetBrains Mono",monospace;font-size:.74rem;letter-spacing:.2em;text-transform:uppercase;color:var(--wine);font-weight:700;display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.kicker::before{content:"";width:30px;height:2px;background:var(--gold)}
+.sec-head{font-size:clamp(2rem,5vw,3.4rem);margin-bottom:18px;max-width:18ch}
+.lead{font-size:clamp(1.02rem,1.8vw,1.22rem);color:var(--muted);max-width:62ch}
+.reveal{opacity:0;transform:translateY(34px);transition:.7s cubic-bezier(.2,.7,.2,1)}
+.reveal.in{opacity:1;transform:none}
+
+/* ---------- FACTS ---------- */
+#facts{background:linear-gradient(180deg,var(--bg),#fff)}
+.facts-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:18px;margin-top:30px}
+.fact{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:26px 22px;position:relative;overflow:hidden;transition:.35s}
+.fact::before{content:"";position:absolute;left:0;top:0;height:100%;width:5px;background:var(--grad)}
+.fact:hover{transform:translateY(-6px);box-shadow:0 20px 40px -22px rgba(94,21,42,.5);border-color:transparent}
+.fact .num{font-family:"Bricolage Grotesque";font-weight:800;font-size:clamp(2rem,4vw,2.9rem);color:var(--wine);line-height:1}
+.fact .lab{font-family:"JetBrains Mono",monospace;font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:10px}
+.region-band{margin-top:26px;background:var(--grad);color:#fff;border-radius:22px;padding:34px;display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:24px;align-items:center}
+.region-band .rb-title{font-family:"Bricolage Grotesque";font-weight:800;font-size:1.5rem;line-height:1.1}
+.region-band .rb-title small{display:block;font-family:"JetBrains Mono";font-weight:500;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;opacity:.85;margin-top:8px}
+.region-band .rb b{font-family:"Bricolage Grotesque";font-size:1.9rem;display:block}
+.region-band .rb span{font-family:"JetBrains Mono";font-size:.68rem;letter-spacing:.1em;text-transform:uppercase;opacity:.9}
+
+/* ---------- TWO COL ---------- */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:54px;align-items:center}
+.media{border-radius:22px;overflow:hidden;border:1px solid var(--line);box-shadow:0 30px 60px -40px rgba(0,0,0,.5);aspect-ratio:4/3;position:relative;background:var(--grad)}
+.media iframe{width:100%;height:100%;border:0;display:block}
+.map-tag{position:absolute;left:16px;bottom:16px;z-index:3;background:rgba(255,255,255,.92);border-radius:12px;padding:10px 14px;font-family:"JetBrains Mono";font-size:.72rem;font-weight:700;letter-spacing:.06em;display:flex;gap:8px;align-items:center}
+
+/* ---------- TIMELINE ---------- */
+#history{background:#fff}
+.timeline{margin-top:40px;position:relative}
+.timeline::before{content:"";position:absolute;left:0;right:0;top:34px;height:2px;background:linear-gradient(90deg,var(--wine),var(--gold))}
+.tl-track{display:flex;gap:20px;overflow-x:auto;padding-bottom:18px;scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch}
+.tl-track::-webkit-scrollbar{height:8px}.tl-track::-webkit-scrollbar-thumb{background:var(--line);border-radius:9px}
+.tl-item{scroll-snap-align:start;flex:0 0 250px;position:relative;padding-top:56px}
+.tl-item .dot{position:absolute;top:27px;left:0;width:16px;height:16px;border-radius:50%;background:#fff;border:4px solid var(--wine);box-shadow:0 0 0 5px rgba(142,40,67,.12)}
+.tl-item .yr{font-family:"Bricolage Grotesque";font-weight:800;font-size:1.7rem;color:var(--wine)}
+.tl-item p{font-size:.95rem;color:var(--muted);margin-top:6px}
+.hint{font-family:"JetBrains Mono";font-size:.68rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-top:14px;display:flex;gap:8px;align-items:center;opacity:.8}
+
+/* ---------- CARD GRID (culture/sport/facts) ---------- */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(248px,1fr));gap:22px;margin-top:38px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:28px;transition:.35s;position:relative;overflow:hidden}
+.card:hover{transform:translateY(-7px);box-shadow:0 26px 50px -30px rgba(94,21,42,.55);border-color:transparent}
+.card .ic{width:50px;height:50px;border-radius:14px;display:grid;place-items:center;font-size:1.5rem;background:linear-gradient(135deg,rgba(142,40,67,.12),rgba(198,138,46,.16));margin-bottom:16px}
+.card h3{font-size:1.18rem;margin-bottom:8px}
+.card p{font-size:.95rem;color:var(--muted)}
+
+/* ---------- MINT ---------- */
+#mint{background:var(--grad);color:#fff;overflow:hidden}
+#mint::after{content:"";position:absolute;inset:0;opacity:.08;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");pointer-events:none}
+#mint .kicker{color:var(--gold-lt)}#mint .kicker::before{background:var(--gold-lt)}
+#mint .lead{color:rgba(255,255,255,.86)}
+.mint-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:22px;margin-top:38px;position:relative;z-index:2}
+.mint-card{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:28px;backdrop-filter:blur(6px);transition:.35s}
+.mint-card:hover{background:rgba(255,255,255,.14);transform:translateY(-6px)}
+.mint-card .tag{font-family:"JetBrains Mono";font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:var(--gold-lt);font-weight:700}
+.mint-card h3{font-size:1.25rem;margin:10px 0 8px}
+.mint-card p{font-size:.94rem;color:rgba(255,255,255,.84)}
+
+/* ---------- CHARTS ---------- */
+#data{background:#fff}
+.chart-grid{display:grid;grid-template-columns:1.4fr 1fr;gap:30px;margin-top:38px}
+.chart-box{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:26px}
+.chart-box h3{font-size:1.05rem;margin-bottom:6px}
+.chart-box p{font-size:.84rem;color:var(--muted);margin-bottom:14px}
+.chart-holder{position:relative;height:300px}
+
+/* ---------- VIDEO ---------- */
+#film{background:linear-gradient(180deg,#fff,var(--bg))}
+.video-card{margin-top:34px;border-radius:24px;overflow:hidden;position:relative;aspect-ratio:21/9;background:var(--grad);display:flex;align-items:center;justify-content:center;text-decoration:none;color:#fff;border:1px solid var(--line)}
+.video-card::after{content:"";position:absolute;inset:0;background:radial-gradient(50% 80% at 50% 50%,rgba(0,0,0,.15),rgba(0,0,0,.45))}
+.video-card .play{position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;gap:16px;transition:.3s}
+.video-card:hover .play{transform:scale(1.06)}
+.play .circ{width:84px;height:84px;border-radius:50%;background:rgba(255,255,255,.16);border:2px solid #fff;display:grid;place-items:center;backdrop-filter:blur(4px)}
+.play .circ svg{width:30px;height:30px;margin-left:5px;fill:#fff}
+.play .txt{font-family:"JetBrains Mono";letter-spacing:.16em;text-transform:uppercase;font-size:.78rem;font-weight:700}
+
+/* ---------- GALLERY ---------- */
+#gallery{background:var(--bg)}
+.gal{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:180px;gap:14px;margin-top:36px}
+.gal figure{position:relative;border-radius:16px;overflow:hidden;background:var(--grad);border:1px solid var(--line)}
+.gal figure.tall{grid-row:span 2}.gal figure.wide{grid-column:span 2}
+.gal img{width:100%;height:100%;object-fit:cover;transition:.6s}
+.gal figure:hover img{transform:scale(1.08)}
+.gal figcaption{position:absolute;left:0;right:0;bottom:0;padding:30px 14px 12px;color:#fff;font-size:.82rem;font-weight:600;
+  background:linear-gradient(transparent,rgba(0,0,0,.7));z-index:2}
+.gal .ph{position:absolute;inset:0;display:grid;place-items:center;color:rgba(255,255,255,.85);font-size:1.8rem}
+
+/* ---------- FOOTER ---------- */
+footer{background:var(--wine-dk);color:#fff;padding:60px 0 40px}
+footer .f-top{display:flex;flex-wrap:wrap;justify-content:space-between;gap:24px;align-items:center;border-bottom:1px solid rgba(255,255,255,.16);padding-bottom:28px}
+footer h2{font-size:2rem}
+footer .partners{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+footer .partners a{font-family:"JetBrains Mono";font-size:.72rem;letter-spacing:.08em;border:1px solid rgba(255,255,255,.25);border-radius:999px;padding:8px 14px;text-decoration:none;transition:.25s}
+footer .partners a:hover{background:#fff;color:var(--wine-dk)}
+footer .fine{margin-top:26px;font-size:.78rem;opacity:.7}
+
+@media(max-width:880px){
+  .split{grid-template-columns:1fr;gap:30px}
+  .chart-grid{grid-template-columns:1fr}
+  .region-band{grid-template-columns:1fr 1fr;gap:18px;text-align:left}
+  .gal{grid-template-columns:repeat(2,1fr)}
+  .hero-inner{padding-top:120px}
+}
+@media(max-width:520px){
+  .langset button{padding:6px 9px}
+  .brand span.full{display:none}
+  .gal{grid-template-columns:1fr}.gal figure.wide{grid-column:span 1}
+}
+</style>
+</head>
+<body data-theme="kirn">
+
+<div class="topbar">
+  <div class="brand"><span class="dot"></span><span class="full">MINT&nbsp;·&nbsp;Kirn / Rheinland-Pfalz</span></div>
+  <div class="langset" id="langset">
+    <button data-lang="pl" class="active">PL</button>
+    <button data-lang="en">EN</button>
+    <button data-lang="de">DE</button>
+  </div>
+</div>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-inner wrap">
+    <span class="eyebrow" data-t="eyebrow">Rheinland-Pfalz · Niemcy · Projekt MINT</span>
+    <h1>Kirn</h1>
+    <p class="tagline" data-t="tagline">Małe miasto nad rzeką Nahe u stóp zamku Kyrburg.</p>
+    <div class="hero-meta">
+      <span data-t="m1">📍 Nahe · Hunsrück</span>
+      <span data-t="m2">👥 ok. <b>8 500</b> mieszk.</span>
+      <span data-t="m3">🏰 Kyrburg od <b>926</b></span>
+    </div>
+  </div>
+  <div class="scrollcue"><span data-t="scroll">Przewiń</span><span class="bar"></span></div>
+</header>
+
+<!-- FACTS -->
+<section id="facts">
+  <div class="wrap reveal">
+    <div class="kicker" data-t="k_facts">W pigułce</div>
+    <h2 class="sec-head" data-t="h_facts">Kirn w liczbach</h2>
+    <p class="lead" data-t="l_facts">Najmniejszy z partnerów projektu — ale z ogromną historią i charakterem.</p>
+    <div class="facts-grid" id="factsGrid"></div>
+    <div class="region-band">
+      <div class="rb-title" data-t="rb_title">Rheinland-Pfalz<small>Kraj związkowy / Bundesland</small></div>
+      <div class="rb"><b>4,1 M</b><span data-t="rb1">Mieszkańców</span></div>
+      <div class="rb"><b>70%</b><span data-t="rb2">niem. wina</span></div>
+      <div class="rb"><b>Mainz</b><span data-t="rb3">Stolica</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- MAP -->
+<section id="map">
+  <div class="wrap split">
+    <div class="reveal">
+      <div class="kicker" data-t="k_map">Gdzie to jest?</div>
+      <h2 class="sec-head" data-t="h_map">Na południowym skraju Hunsrücku</h2>
+      <p class="lead" data-t="l_map">Kirn leży w dolinie Nahe, ok. 35 km na południowy zachód od Bad Kreuznach i ok. 60 km od Moguncji. Otaczają je strome, zalesione wzgórza i winnice.</p>
+    </div>
+    <div class="reveal media">
+      <iframe loading="lazy" src="https://www.openstreetmap.org/export/embed.html?bbox=7.39%2C49.76%2C7.53%2C49.82&amp;layer=mapnik&amp;marker=49.7906%2C7.4575"></iframe>
+      <div class="map-tag">📍 49.79° N · 7.46° E</div>
+    </div>
+  </div>
+</section>
+
+<!-- HISTORY -->
+<section id="history">
+  <div class="wrap reveal">
+    <div class="kicker" data-t="k_hist">Oś czasu</div>
+    <h2 class="sec-head" data-t="h_hist">Ponad 1000 lat historii</h2>
+    <p class="lead" data-t="l_hist">Od średniowiecznego targowiska i siedziby dzikich i reńskich hrabiów po „miasto skóry" i nowoczesny przemysł tworzyw sztucznych.</p>
+    <div class="timeline"><div class="tl-track" id="tlTrack"></div></div>
+    <div class="hint" data-t="hint_scroll">← przesuń, aby zobaczyć więcej →</div>
+  </div>
+</section>
+
+<!-- CULTURE -->
+<section id="culture">
+  <div class="wrap reveal">
+    <div class="kicker" data-t="k_cult">Kultura &amp; zabytki</div>
+    <h2 class="sec-head" data-t="h_cult">Co warto zobaczyć</h2>
+    <div class="cards" id="cultGrid"></div>
+  </div>
+</section>
+
+<!-- SPORT -->
+<section id="sport" style="background:#fff">
+  <div class="wrap reveal">
+    <div class="kicker" data-t="k_sport">Sport &amp; natura</div>
+    <h2 class="sec-head" data-t="h_sport">Aktywnie w dolinie Nahe</h2>
+    <div class="cards" id="sportGrid"></div>
+  </div>
+</section>
+
+<!-- MINT -->
+<section id="mint">
+  <div class="wrap reveal">
+    <div class="kicker" data-t="k_mint">Spotlight MINT / STEM</div>
+    <h2 class="sec-head" data-t="h_mint">Nauka i technika z regionu</h2>
+    <p class="lead" data-t="l_mint">Region, który dał światu druk, materiały przyszłości i jeden z największych zakładów chemicznych.</p>
+    <div class="mint-grid" id="mintGrid"></div>
+  </div>
+</section>
+
+<!-- DATA -->
+<section id="data">
+  <div class="wrap reveal">
+    <div class="kicker" data-t="k_data">Dane &amp; wykresy</div>
+    <h2 class="sec-head" data-t="h_data">Liczby, które robią wrażenie</h2>
+    <div class="chart-grid">
+      <div class="chart-box">
+        <h3 data-t="c1_t">Miasta partnerskie — liczba mieszkańców</h3>
+        <p data-t="c1_p">Kirn to najmniejszy, ale równie ważny partner.</p>
+        <div class="chart-holder"><canvas id="chartPop"></canvas></div>
+      </div>
+      <div class="chart-box">
+        <h3 data-t="c2_t">Wino w Niemczech</h3>
+        <p data-t="c2_p">Udział Rheinland-Pfalz w niemieckiej produkcji wina.</p>
+        <div class="chart-holder"><canvas id="chartWine"></canvas></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FILM -->
+<section id="film">
+  <div class="wrap reveal">
+    <div class="kicker" data-t="k_film">Film</div>
+    <h2 class="sec-head" data-t="h_film">Zobacz region w ruchu</h2>
+    <p class="lead" data-t="l_film">Krótki spacer po Kirn, dolinie Nahe i Rheinland-Pfalz.</p>
+    <a class="video-card" id="videoCard" target="_blank" rel="noopener" href="https://www.youtube.com/results?search_query=Kirn+Nahe+Rheinland-Pfalz">
+      <div class="play"><span class="circ"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><span class="txt" data-t="watch">Otwórz na YouTube</span></div>
+    </a>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery">
+  <div class="wrap reveal">
+    <div class="kicker" data-t="k_gal">Galeria</div>
+    <h2 class="sec-head" data-t="h_gal">Obrazy regionu</h2>
+    <div class="gal" id="galGrid"></div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="f-top">
+      <h2 data-t="f_title">Projekt MINT · Kirn / Rheinland-Pfalz</h2>
+      <div class="langset" id="langset2">
+        <button data-lang="pl" class="active">PL</button>
+        <button data-lang="en">EN</button>
+        <button data-lang="de">DE</button>
+      </div>
+    </div>
+    <div class="partners">
+      <a href="01-kirn-rheinland-pfalz.html">Kirn · RLP</a>
+      <a href="02-duisburg-nrw.html">Duisburg · NRW</a>
+      <a href="03-wuerzburg-bayern.html">Würzburg · Bayern</a>
+      <a href="04-bialystok-podlasie.html">Białystok · Podlasie</a>
+      <a href="05-halle-sachsen-anhalt.html">Halle · Sachsen-Anhalt</a>
+    </div>
+    <p class="fine" data-t="f_fine">Treści edukacyjne. Zdjęcia: Wikimedia Commons. Mapa: © OpenStreetMap. Dane: m.in. urzędy statystyczne i Wikipedia.</p>
+  </div>
+</footer>
+
+<script>
+/* ============ CONTENT (PL / EN / DE) ============ */
+const T = {
+ pl:{
+  eyebrow:"Rheinland-Pfalz · Niemcy · Projekt MINT",
+  tagline:"Małe miasto nad rzeką Nahe u stóp zamku Kyrburg.",
+  m1:"📍 Nahe · Hunsrück", m2:"👥 ok. <b>8 500</b> mieszk.", m3:"🏰 Kyrburg od <b>926</b>",
+  scroll:"Przewiń",
+  k_facts:"W pigułce", h_facts:"Kirn w liczbach",
+  l_facts:"Najmniejszy z partnerów projektu — ale z ogromną historią i charakterem.",
+  rb_title:"Rheinland-Pfalz", rb_sub:"Kraj związkowy / Bundesland", rb1:"Mieszkańców", rb2:"niem. wina", rb3:"Stolica",
+  k_map:"Gdzie to jest?", h_map:"Na południowym skraju Hunsrücku",
+  l_map:"Kirn leży w dolinie Nahe, ok. 35 km na płd.-zach. od Bad Kreuznach i ok. 60 km od Moguncji (Mainz). Otaczają je strome, zalesione wzgórza i winnice.",
+  k_hist:"Oś czasu", h_hist:"Ponad 1000 lat historii",
+  l_hist:"Od średniowiecznego targowiska i siedziby dzikich i reńskich hrabiów po „miasto skóry” i nowoczesny przemysł tworzyw sztucznych.",
+  hint_scroll:"← przesuń, aby zobaczyć więcej →",
+  k_cult:"Kultura & zabytki", h_cult:"Co warto zobaczyć",
+  k_sport:"Sport & natura", h_sport:"Aktywnie w dolinie Nahe",
+  k_mint:"Spotlight MINT / STEM", h_mint:"Nauka i technika z regionu",
+  l_mint:"Region, który dał światu druk, materiały przyszłości i jeden z największych zakładów chemicznych w Europie.",
+  k_data:"Dane & wykresy", h_data:"Liczby, które robią wrażenie",
+  c1_t:"Miasta partnerskie — liczba mieszkańców", c1_p:"Kirn to najmniejszy, ale równie ważny partner.",
+  c2_t:"Wino w Niemczech", c2_p:"Udział Rheinland-Pfalz w niemieckiej produkcji wina.",
+  c2_a:"Rheinland-Pfalz", c2_b:"reszta Niemiec",
+  k_film:"Film", h_film:"Zobacz region w ruchu", l_film:"Krótki spacer po Kirn, dolinie Nahe i Rheinland-Pfalz.", watch:"Otwórz na YouTube",
+  k_gal:"Galeria", h_gal:"Obrazy regionu",
+  f_title:"Projekt MINT · Kirn / Rheinland-Pfalz",
+  f_fine:"Treści edukacyjne. Zdjęcia: Wikimedia Commons. Mapa: © OpenStreetMap. Dane: m.in. urzędy statystyczne i Wikipedia.",
+  facts:[
+   {n:"~8 500",l:"Mieszkańców"},{n:"16,53",l:"km² powierzchni"},{n:"841",l:"Pierwsza wzmianka"},
+   {n:"1857",l:"Prawa miejskie"},{n:"~200 m",l:"n.p.m."},{n:"Nahe",l:"Rzeka"}
+  ],
+  timeline:[
+   {y:"841",t:"Pierwsza wzmianka jako „Chira” w dokumentach klasztoru Fulda."},
+   {y:"926",t:"Trzej frankijscy możni wznoszą zamek Kyrburg na wzgórzu."},
+   {y:"~1100",t:"Dzicy hrabiowie (Wildgrafen) von Kyrburg zarządzają okolicą."},
+   {y:"1408",t:"Kirn staje się główną siedzibą dzikich i reńskich hrabiów."},
+   {y:"1688",t:"W wojnach z Francją zamek Kyrburg zostaje zniszczony."},
+   {y:"1771",t:"Powstaje barokowa Książęca Piwniczka (Fürstliche Kellerei)."},
+   {y:"1815",t:"Po epoce francuskiej Kirn trafia do Prus (Prowincja Reńska)."},
+   {y:"1857",t:"Kirn oficjalnie otrzymuje prawa miejskie."},
+   {y:"XX w.",t:"„Miasto skóry” — garbarstwo, później przemysł tworzyw (SIMONA AG)."}
+  ],
+  culture:[
+   {i:"🏰",h:"Zamek Kyrburg",p:"Symbol miasta. W ruinach mieści się dziś muzeum whisky z jedną z największych kolekcji w Europie."},
+   {i:"🍷",h:"Fürstliche Kellerei",p:"Barokowa „książęca piwniczka” rodu Salm-Kyrburg z 1771 r. w kształcie podkowy."},
+   {i:"🍺",h:"Kirner Pils",p:"Lokalny browar — piwo znane w całym Rheinland-Pfalz. „Bier hat Heimat in Kirn”."},
+   {i:"🏚️",h:"Domy garbarzy",p:"Kolorowe szachulcowe (mur pruski) domy garbarzy przy rynku — ślad po „mieście skóry”."},
+   {i:"🐎",h:"Schinderhannes",p:"W okolicy działał najsłynniejszy niemiecki rozbójnik — Johannes Bückler „Schinderhannes”."},
+   {i:"🎭",h:"Mainz & Fastnacht",p:"Stolica regionu Mainz słynie z karnawału (Fastnacht) i jako miasto Gutenberga."}
+  ],
+  sport:[
+   {i:"🚴",h:"Nahe-Radweg",p:"Malownicza trasa rowerowa wzdłuż rzeki Nahe — od źródeł aż do Renu."},
+   {i:"🥾",h:"Soonwaldsteig",p:"Szlaki górskie po Hunsrücku i Soonwaldzie z panoramami doliny."},
+   {i:"🧗",h:"Skały Kallenfels",p:"Porfirowe skały to popularne miejsce wspinaczki tuż obok miasta."},
+   {i:"🛶",h:"Kajaki na Nahe",p:"Spływy kajakowe i kąpiele w czystej rzece latem."}
+  ],
+  mint:[
+   {tag:"Materiały / Inżynieria",h:"SIMONA AG",p:"Największy pracodawca Kirn — światowy producent półfabrykatów z tworzyw termoplastycznych dla przemysłu i medycyny."},
+   {tag:"Informatyka / Druk",h:"Gutenberg w Mainz",p:"Ok. 1440 r. Jan Gutenberg wynalazł w Moguncji druk ruchomą czcionką — jeden z przełomów cywilizacji."},
+   {tag:"Chemia",h:"BASF w Ludwigshafen",p:"W regionie działa BASF — największy zintegrowany zakład chemiczny na świecie."}
+  ],
+  gallery:[
+   {f:"Kyrburg.jpg",c:"Zamek Kyrburg",cls:"wide"},
+   {f:"Nahe (river).jpg",c:"Rzeka Nahe",cls:""},
+   {f:"Mainz Dom 2013.jpg",c:"Katedra w Mainz",cls:"tall"},
+   {f:"Weinberg Pfalz.jpg",c:"Winnice Rheinland-Pfalz",cls:""},
+   {f:"Idar-Oberstein Felsenkirche.jpg",c:"Idar-Oberstein w pobliżu",cls:""},
+   {f:"Burg Kyrburg Kirn.jpg",c:"Widok na Kirn",cls:"wide"}
+  ]
+ },
+
+ en:{
+  eyebrow:"Rhineland-Palatinate · Germany · MINT Project",
+  tagline:"A small town on the river Nahe at the foot of Kyrburg Castle.",
+  m1:"📍 Nahe · Hunsrück", m2:"👥 approx. <b>8,500</b> people", m3:"🏰 Kyrburg since <b>926</b>",
+  scroll:"Scroll",
+  k_facts:"In a nutshell", h_facts:"Kirn in numbers",
+  l_facts:"The smallest of the project partners — but full of history and character.",
+  rb_title:"Rhineland-Palatinate", rb_sub:"Federal state / Bundesland", rb1:"Inhabitants", rb2:"of German wine", rb3:"Capital",
+  k_map:"Where is it?", h_map:"At the southern edge of the Hunsrück",
+  l_map:"Kirn sits in the Nahe valley, about 35 km southwest of Bad Kreuznach and ~60 km from Mainz, surrounded by steep wooded hills and vineyards.",
+  k_hist:"Timeline", h_hist:"Over 1,000 years of history",
+  l_hist:"From a medieval market town and seat of the Wild- and Rhinegraves to the “City of Leather” and modern plastics industry.",
+  hint_scroll:"← swipe to see more →",
+  k_cult:"Culture & sights", h_cult:"What to see",
+  k_sport:"Sport & nature", h_sport:"Active in the Nahe valley",
+  k_mint:"MINT / STEM spotlight", h_mint:"Science & technology from the region",
+  l_mint:"A region that gave the world printing, materials of the future and one of Europe’s largest chemical plants.",
+  k_data:"Data & charts", h_data:"Numbers that impress",
+  c1_t:"Partner cities — population", c1_p:"Kirn is the smallest, yet an equally important partner.",
+  c2_t:"Wine in Germany", c2_p:"Rhineland-Palatinate’s share of German wine production.",
+  c2_a:"Rhineland-Palatinate", c2_b:"rest of Germany",
+  k_film:"Film", h_film:"See the region in motion", l_film:"A short walk through Kirn, the Nahe valley and Rhineland-Palatinate.", watch:"Open on YouTube",
+  k_gal:"Gallery", h_gal:"Images of the region",
+  f_title:"MINT Project · Kirn / Rhineland-Palatinate",
+  f_fine:"Educational content. Photos: Wikimedia Commons. Map: © OpenStreetMap. Data: statistical offices and Wikipedia.",
+  facts:[
+   {n:"~8,500",l:"Inhabitants"},{n:"16.53",l:"km² area"},{n:"841",l:"First mentioned"},
+   {n:"1857",l:"Town charter"},{n:"~200 m",l:"above sea level"},{n:"Nahe",l:"River"}
+  ],
+  timeline:[
+   {y:"841",t:"First documented as “Chira” in records of Fulda Monastery."},
+   {y:"926",t:"Three Frankish nobles build Kyrburg Castle on the hill."},
+   {y:"~1100",t:"The Wildgraves (Wild Counts) of Kyrburg rule the area."},
+   {y:"1408",t:"Kirn becomes the main seat of the Wild- and Rhinegraves."},
+   {y:"1688",t:"Kyrburg Castle is destroyed during the wars with France."},
+   {y:"1771",t:"The baroque Princely Cellar (Fürstliche Kellerei) is built."},
+   {y:"1815",t:"After the French era Kirn becomes part of Prussia."},
+   {y:"1857",t:"Kirn is officially granted town rights."},
+   {y:"20th c.",t:"“City of Leather” — tanning, later the plastics industry (SIMONA AG)."}
+  ],
+  culture:[
+   {i:"🏰",h:"Kyrburg Castle",p:"The town’s landmark. The ruins now host a whisky museum with one of Europe’s largest collections."},
+   {i:"🍷",h:"Fürstliche Kellerei",p:"A baroque, horseshoe-shaped “princely cellar” of the House of Salm-Kyrburg from 1771."},
+   {i:"🍺",h:"Kirner Pils",p:"The local brewery — a beer known across Rhineland-Palatinate. “Beer has a home in Kirn.”"},
+   {i:"🏚️",h:"Tanners’ houses",p:"Colourful half-timbered tanners’ houses by the market — relics of the “City of Leather”."},
+   {i:"🐎",h:"Schinderhannes",p:"Germany’s most famous robber, Johannes Bückler “Schinderhannes”, was active nearby."},
+   {i:"🎭",h:"Mainz & Carnival",p:"The regional capital Mainz is famous for its carnival (Fastnacht) and as Gutenberg’s city."}
+  ],
+  sport:[
+   {i:"🚴",h:"Nahe Cycle Path",p:"A scenic cycling route along the Nahe river — from its source all the way to the Rhine."},
+   {i:"🥾",h:"Soonwaldsteig",p:"Hiking trails across the Hunsrück hills with panoramic valley views."},
+   {i:"🧗",h:"Kallenfels rocks",p:"Porphyry cliffs right next to town — a popular climbing spot."},
+   {i:"🛶",h:"Kayaking on the Nahe",p:"Kayak trips and summer swims in the clean river."}
+  ],
+  mint:[
+   {tag:"Materials / Engineering",h:"SIMONA AG",p:"Kirn’s largest employer — a global maker of thermoplastic semi-finished products for industry and medicine."},
+   {tag:"Computing / Printing",h:"Gutenberg in Mainz",p:"Around 1440 Johannes Gutenberg invented movable-type printing in Mainz — a turning point in human history."},
+   {tag:"Chemistry",h:"BASF in Ludwigshafen",p:"The region is home to BASF — the largest integrated chemical complex in the world."}
+  ],
+  gallery:[
+   {f:"Kyrburg.jpg",c:"Kyrburg Castle",cls:"wide"},
+   {f:"Nahe (river).jpg",c:"The river Nahe",cls:""},
+   {f:"Mainz Dom 2013.jpg",c:"Mainz Cathedral",cls:"tall"},
+   {f:"Weinberg Pfalz.jpg",c:"Vineyards of Rhineland-Palatinate",cls:""},
+   {f:"Idar-Oberstein Felsenkirche.jpg",c:"Nearby Idar-Oberstein",cls:""},
+   {f:"Burg Kyrburg Kirn.jpg",c:"View over Kirn",cls:"wide"}
+  ]
+ },
+
+ de:{
+  eyebrow:"Rheinland-Pfalz · Deutschland · MINT-Projekt",
+  tagline:"Eine Kleinstadt an der Nahe zu Füßen der Kyrburg.",
+  m1:"📍 Nahe · Hunsrück", m2:"👥 ca. <b>8.500</b> Einw.", m3:"🏰 Kyrburg seit <b>926</b>",
+  scroll:"Scrollen",
+  k_facts:"Kurzporträt", h_facts:"Kirn in Zahlen",
+  l_facts:"Der kleinste Projektpartner — aber voller Geschichte und Charakter.",
+  rb_title:"Rheinland-Pfalz", rb_sub:"Bundesland", rb1:"Einwohner", rb2:"des dt. Weins", rb3:"Hauptstadt",
+  k_map:"Wo liegt das?", h_map:"Am Südrand des Hunsrücks",
+  l_map:"Kirn liegt im Nahetal, rund 35 km südwestlich von Bad Kreuznach und ca. 60 km von Mainz — umgeben von steilen bewaldeten Höhen und Weinbergen.",
+  k_hist:"Zeitleiste", h_hist:"Über 1.000 Jahre Geschichte",
+  l_hist:"Vom mittelalterlichen Marktflecken und Sitz der Wild- und Rheingrafen über die „Stadt des Leders“ bis zur modernen Kunststoffindustrie.",
+  hint_scroll:"← wischen für mehr →",
+  k_cult:"Kultur & Sehenswertes", h_cult:"Was man sehen sollte",
+  k_sport:"Sport & Natur", h_sport:"Aktiv im Nahetal",
+  k_mint:"MINT / STEM-Spotlight", h_mint:"Wissenschaft & Technik aus der Region",
+  l_mint:"Eine Region, die der Welt den Buchdruck, Werkstoffe der Zukunft und eines der größten Chemiewerke Europas schenkte.",
+  k_data:"Daten & Diagramme", h_data:"Zahlen, die beeindrucken",
+  c1_t:"Partnerstädte — Einwohnerzahl", c1_p:"Kirn ist der kleinste, aber ebenso wichtige Partner.",
+  c2_t:"Wein in Deutschland", c2_p:"Anteil von Rheinland-Pfalz an der deutschen Weinproduktion.",
+  c2_a:"Rheinland-Pfalz", c2_b:"übriges Deutschland",
+  k_film:"Film", h_film:"Die Region in Bewegung", l_film:"Ein kurzer Spaziergang durch Kirn, das Nahetal und Rheinland-Pfalz.", watch:"Auf YouTube öffnen",
+  k_gal:"Galerie", h_gal:"Bilder der Region",
+  f_title:"MINT-Projekt · Kirn / Rheinland-Pfalz",
+  f_fine:"Bildungsinhalte. Fotos: Wikimedia Commons. Karte: © OpenStreetMap. Daten: u. a. Statistikämter und Wikipedia.",
+  facts:[
+   {n:"~8.500",l:"Einwohner"},{n:"16,53",l:"km² Fläche"},{n:"841",l:"Erste Erwähnung"},
+   {n:"1857",l:"Stadtrechte"},{n:"~200 m",l:"über NN"},{n:"Nahe",l:"Fluss"}
+  ],
+  timeline:[
+   {y:"841",t:"Erste Erwähnung als „Chira“ in Urkunden des Klosters Fulda."},
+   {y:"926",t:"Drei fränkische Adlige errichten die Kyrburg auf der Anhöhe."},
+   {y:"~1100",t:"Die Wildgrafen von Kyrburg verwalten die Region."},
+   {y:"1408",t:"Kirn wird Hauptort der Wild- und Rheingrafen."},
+   {y:"1688",t:"Die Kyrburg wird in den Kriegen mit Frankreich zerstört."},
+   {y:"1771",t:"Die barocke Fürstliche Kellerei wird erbaut."},
+   {y:"1815",t:"Nach der Franzosenzeit kommt Kirn zu Preußen."},
+   {y:"1857",t:"Kirn erhält offiziell die Stadtrechte."},
+   {y:"20. Jh.",t:"„Stadt des Leders“ — Gerberei, später Kunststoffindustrie (SIMONA AG)."}
+  ],
+  culture:[
+   {i:"🏰",h:"Kyrburg",p:"Das Wahrzeichen der Stadt. In der Ruine befindet sich heute ein Whiskymuseum mit einer der größten Sammlungen Europas."},
+   {i:"🍷",h:"Fürstliche Kellerei",p:"Eine barocke, hufeisenförmige „fürstliche Kellerei“ des Hauses Salm-Kyrburg von 1771."},
+   {i:"🍺",h:"Kirner Pils",p:"Die örtliche Brauerei — ein in ganz Rheinland-Pfalz bekanntes Bier. „Bier hat Heimat in Kirn.“"},
+   {i:"🏚️",h:"Gerberhäuser",p:"Bunte Fachwerk-Gerberhäuser am Markt — Zeugen der „Stadt des Leders“."},
+   {i:"🐎",h:"Schinderhannes",p:"In der Gegend trieb Deutschlands berühmtester Räuber, Johannes Bückler „Schinderhannes“, sein Unwesen."},
+   {i:"🎭",h:"Mainz & Fastnacht",p:"Die Landeshauptstadt Mainz ist berühmt für ihre Fastnacht und als Gutenberg-Stadt."}
+  ],
+  sport:[
+   {i:"🚴",h:"Nahe-Radweg",p:"Ein malerischer Radweg entlang der Nahe — von der Quelle bis zum Rhein."},
+   {i:"🥾",h:"Soonwaldsteig",p:"Wanderwege über den Hunsrück und Soonwald mit Panoramablicken ins Tal."},
+   {i:"🧗",h:"Kallenfelser Felsen",p:"Porphyrfelsen direkt neben der Stadt — ein beliebtes Klettergebiet."},
+   {i:"🛶",h:"Kajak auf der Nahe",p:"Kajaktouren und Badespaß im sauberen Fluss im Sommer."}
+  ],
+  mint:[
+   {tag:"Werkstoffe / Technik",h:"SIMONA AG",p:"Größter Arbeitgeber Kirns — weltweiter Hersteller thermoplastischer Halbzeuge für Industrie und Medizin."},
+   {tag:"Informatik / Druck",h:"Gutenberg in Mainz",p:"Um 1440 erfand Johannes Gutenberg in Mainz den Buchdruck mit beweglichen Lettern — ein Wendepunkt der Geschichte."},
+   {tag:"Chemie",h:"BASF in Ludwigshafen",p:"In der Region liegt die BASF — der größte zusammenhängende Chemiestandort der Welt."}
+  ],
+  gallery:[
+   {f:"Kyrburg.jpg",c:"Kyrburg",cls:"wide"},
+   {f:"Nahe (river).jpg",c:"Der Fluss Nahe",cls:""},
+   {f:"Mainz Dom 2013.jpg",c:"Mainzer Dom",cls:"tall"},
+   {f:"Weinberg Pfalz.jpg",c:"Weinberge in Rheinland-Pfalz",cls:""},
+   {f:"Idar-Oberstein Felsenkirche.jpg",c:"Idar-Oberstein in der Nähe",cls:""},
+   {f:"Burg Kyrburg Kirn.jpg",c:"Blick über Kirn",cls:"wide"}
+  ]
+ }
+};
+
+/* ============ CHART DATA ============ */
+const POP = {labels:["Kirn","Würzburg","Halle","Białystok","Duisburg"], data:[8500,132000,243000,290000,502000]};
+const C2VALS=[70,30];   /* second chart values */
+const SELF=0;           /* index of this city in POP */
+
+/* ============ RENDER ENGINE ============ */
+let popChart, wineChart, current="pl";
+const $=s=>document.querySelector(s), $$=s=>document.querySelectorAll(s);
+const wikimedia=f=>"https://commons.wikimedia.org/wiki/Special:FilePath/"+encodeURIComponent(f)+"?width=800";
+
+function setStatic(lang){
+  $$("[data-t]").forEach(el=>{
+    const k=el.getAttribute("data-t");
+    if(T[lang][k]!==undefined) el.innerHTML=T[lang][k];
+  });
+  $(".region-band .rb-title").innerHTML=T[lang].rb_title+'<small>'+T[lang].rb_sub+'</small>';
+}
+
+function renderFacts(lang){
+  $("#factsGrid").innerHTML=T[lang].facts.map(f=>
+    `<div class="fact"><div class="num" data-count="${f.n}">${f.n}</div><div class="lab">${f.l}</div></div>`).join("");
+}
+function renderTimeline(lang){
+  $("#tlTrack").innerHTML=T[lang].timeline.map(e=>
+    `<div class="tl-item"><span class="dot"></span><div class="yr">${e.y}</div><p>${e.t}</p></div>`).join("");
+}
+function renderCards(id,arr){
+  $(id).innerHTML=arr.map(c=>
+    `<div class="card"><div class="ic">${c.i}</div><h3>${c.h}</h3><p>${c.p}</p></div>`).join("");
+}
+function renderMint(lang){
+  $("#mintGrid").innerHTML=T[lang].mint.map(c=>
+    `<div class="mint-card"><div class="tag">${c.tag}</div><h3>${c.h}</h3><p>${c.p}</p></div>`).join("");
+}
+function renderGallery(lang){
+  $("#galGrid").innerHTML=T[lang].gallery.map(g=>
+    `<figure class="${g.cls}"><div class="ph">🖼️</div>
+       <img loading="lazy" alt="${g.c}" src="${wikimedia(g.f)}" onload="this.previousElementSibling.style.display='none'" onerror="this.style.display='none'">
+       <figcaption>${g.c}</figcaption></figure>`).join("");
+}
+
+/* count-up (locale-aware, handles 8 500 / 8.500 / 16,53) */
+function parseNum(s){
+  s=s.replace(/\s|\u00a0/g,"");
+  const lastSep=Math.max(s.lastIndexOf(","),s.lastIndexOf("."));
+  let dec=0;
+  if(lastSep>-1){
+    const after=s.length-lastSep-1, sepChar=s[lastSep];
+    if(after===1||after===2){ dec=after;
+      s=s.split("").map(c=> c===sepChar?".":(c===","||c==="."?"":c)).join("");
+    } else { s=s.replace(/[.,]/g,""); }
+  }
+  return {value:parseFloat(s),dec};
+}
+function animateCount(el){
+  if(el.dataset.done==="1")return;
+  const raw=el.getAttribute("data-count");
+  const m=raw.match(/[\d][\d .,\u00a0]*\d|\d/);
+  if(!m){return}
+  el.dataset.done="1";
+  const token=m[0], prefix=raw.slice(0,m.index), suffix=raw.slice(m.index+token.length);
+  const {value:target,dec}=parseNum(token);
+  if(isNaN(target)){el.innerHTML=raw;return}
+  const grp=current==="de"?".":(current==="pl"?"\u00a0":","), decSep=current==="en"?".":",";
+  function fmt(v){ const p=v.toFixed(dec).split("."); p[0]=p[0].replace(/\B(?=(\d{3})+(?!\d))/g,grp); return dec>0?p[0]+decSep+p[1]:p[0]; }
+  let start=null; const dur=1300;
+  function step(ts){ if(!start)start=ts; const pr=Math.min((ts-start)/dur,1); const e=1-Math.pow(1-pr,3);
+    el.innerHTML=prefix+fmt(target*e)+suffix;
+    if(pr<1)requestAnimationFrame(step); else el.innerHTML=raw;
+  }
+  requestAnimationFrame(step);
+}
+
+function buildCharts(lang){
+  const cs=getComputedStyle(document.body);
+  const accent=(cs.getPropertyValue("--wine").trim())||"#8E2843";
+  const gold=(cs.getPropertyValue("--gold").trim())||"#C68A2E";
+  const line=(cs.getPropertyValue("--line").trim())||"#e7ddd0";
+  if(popChart)popChart.destroy(); if(wineChart)wineChart.destroy();
+  const barColors=POP.labels.map((_,i)=>i===SELF?accent:gold);
+  popChart=new Chart($("#chartPop"),{type:"bar",
+    data:{labels:POP.labels,datasets:[{data:POP.data,backgroundColor:barColors,borderRadius:8,maxBarThickness:46}]},
+    options:{indexAxis:"y",plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>c.parsed.x.toLocaleString()}}},
+      scales:{x:{grid:{color:"#eee"},ticks:{font:{family:"JetBrains Mono",size:10}}},y:{grid:{display:false},ticks:{font:{family:"JetBrains Mono",size:12,weight:"700"}}}},
+      responsive:true,maintainAspectRatio:false}});
+  wineChart=new Chart($("#chartWine"),{type:"doughnut",
+    data:{labels:[T[lang].c2_a,T[lang].c2_b],datasets:[{data:C2VALS,backgroundColor:[accent,line],borderWidth:0}]},
+    options:{cutout:"66%",plugins:{legend:{position:"bottom",labels:{font:{family:"JetBrains Mono",size:11},boxWidth:12}}},
+      responsive:true,maintainAspectRatio:false}});
+}
+
+function setLang(lang){
+  current=lang; document.documentElement.lang=lang;
+  setStatic(lang); renderFacts(lang); renderTimeline(lang);
+  renderCards("#cultGrid",T[lang].culture); renderCards("#sportGrid",T[lang].sport);
+  renderMint(lang); renderGallery(lang); buildCharts(lang);
+  $$(".langset").forEach(set=>set.querySelectorAll("button").forEach(b=>b.classList.toggle("active",b.dataset.lang===lang)));
+  // re-run counters for any facts in view
+  $$("#factsGrid .num").forEach(el=>{ if(el.getBoundingClientRect().top<window.innerHeight) animateCount(el); });
+}
+
+/* events */
+$$(".langset button").forEach(b=>b.addEventListener("click",()=>setLang(b.dataset.lang)));
+
+/* reveal + counters on scroll */
+const io=new IntersectionObserver((ents)=>{
+  ents.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add("in");
+    e.target.querySelectorAll&&e.target.querySelectorAll("[data-count]").forEach(animateCount);
+    io.unobserve(e.target);} });
+},{threshold:.15});
+
+window.addEventListener("DOMContentLoaded",()=>{
+  setLang("pl");
+  $$(".reveal").forEach(el=>io.observe(el));
+  const fo=new IntersectionObserver((ents)=>{ents.forEach(e=>{if(e.isIntersecting){e.target.querySelectorAll("[data-count]").forEach(animateCount);fo.unobserve(e.target)}})},{threshold:.3});
+  fo.observe($("#factsGrid"));
+});
+</script>
+</body>
+</html>
