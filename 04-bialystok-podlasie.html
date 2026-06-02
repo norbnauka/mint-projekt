@@ -392,14 +392,7 @@ const T = {
    {tag:"Biologia / Ekologia",h:"Puszcza Białowieska",p:"Ostatni pierwotny las nizinny Europy (UNESCO) i dom żubra — uratowanego od wyginięcia symbolu ochrony przyrody."},
    {tag:"Nauka / Technika",h:"Uczelnie Białegostoku",p:"Politechnika Białostocka i Uniwersytet Medyczny — silne ośrodki badań i nowych technologii."}
   ],
-  gallery:[
-   {f:"Pałac Branickich w Białymstoku.jpg",c:"Pałac Branickich",cls:"wide"},
-   {f:"Białowieża Forest.jpg",c:"Puszcza Białowieska",cls:""},
-   {f:"European bison.jpg",c:"Żubr — symbol Podlasia",cls:"tall"},
-   {f:"Rynek Kościuszki w Białymstoku.jpg",c:"Rynek Kościuszki",cls:""},
-   {f:"Meczet w Kruszynianach.jpg",c:"Meczet w Kruszynianach",cls:""},
-   {f:"Biebrza.jpg",c:"Dolina Biebrzy",cls:"wide"}
-  ]
+  gallery:[{f:"Pałac i Ogród Branickich w Białymstoku.jpg",c:"Pałac i ogród Branickich",cls:""},{f:"Garden of the Branicki Palace in Białystok (1).jpg",c:"Ogród w stylu francuskim",cls:""},{f:"Białystok Branicki Palace Gate.JPG",c:"Brama pałacowa",cls:""},{f:"150913 Branicki Palace in Białystok - 11.jpg",c:"„Wersal Podlasia”",cls:""}]
  },
 
  en:{
@@ -461,14 +454,7 @@ const T = {
    {tag:"Biology / Ecology",h:"Białowieża Forest",p:"Europe's last primeval lowland forest (UNESCO) and home of the European bison — a symbol of conservation saved from extinction."},
    {tag:"Science / Technology",h:"Białystok universities",p:"The Białystok University of Technology and the Medical University — strong hubs for research and new technologies."}
   ],
-  gallery:[
-   {f:"Pałac Branickich w Białymstoku.jpg",c:"Branicki Palace",cls:"wide"},
-   {f:"Białowieża Forest.jpg",c:"Białowieża Forest",cls:""},
-   {f:"European bison.jpg",c:"European bison — symbol of Podlasie",cls:"tall"},
-   {f:"Rynek Kościuszki w Białymstoku.jpg",c:"Kościuszko Market Square",cls:""},
-   {f:"Meczet w Kruszynianach.jpg",c:"Mosque in Kruszyniany",cls:""},
-   {f:"Biebrza.jpg",c:"The Biebrza valley",cls:"wide"}
-  ]
+  gallery:[{f:"Pałac i Ogród Branickich w Białymstoku.jpg",c:"Branicki Palace & garden",cls:""},{f:"Garden of the Branicki Palace in Białystok (1).jpg",c:"The French-style garden",cls:""},{f:"Białystok Branicki Palace Gate.JPG",c:"The palace gate",cls:""},{f:"150913 Branicki Palace in Białystok - 11.jpg",c:"The ‘Versailles of Podlasie’",cls:""}]
  },
 
  de:{
@@ -530,14 +516,7 @@ const T = {
    {tag:"Biologie / Ökologie",h:"Białowieża-Urwald",p:"Europas letzter Tieflandurwald (UNESCO) und Heimat des Wisents — ein vor dem Aussterben geretteter Symbol des Naturschutzes."},
    {tag:"Wissenschaft / Technik",h:"Hochschulen in Białystok",p:"Die Technische Universität Białystok und die Medizinische Universität — starke Zentren für Forschung und neue Technologien."}
   ],
-  gallery:[
-   {f:"Pałac Branickich w Białymstoku.jpg",c:"Branicki-Palast",cls:"wide"},
-   {f:"Białowieża Forest.jpg",c:"Białowieża-Urwald",cls:""},
-   {f:"European bison.jpg",c:"Wisent — Symbol Podlachiens",cls:"tall"},
-   {f:"Rynek Kościuszki w Białymstoku.jpg",c:"Kościuszko-Marktplatz",cls:""},
-   {f:"Meczet w Kruszynianach.jpg",c:"Moschee in Kruszyniany",cls:""},
-   {f:"Biebrza.jpg",c:"Das Biebrza-Tal",cls:"wide"}
-  ]
+  gallery:[{f:"Pałac i Ogród Branickich w Białymstoku.jpg",c:"Branicki-Palast & Garten",cls:""},{f:"Garden of the Branicki Palace in Białystok (1).jpg",c:"Französischer Garten",cls:""},{f:"Białystok Branicki Palace Gate.JPG",c:"Das Palasttor",cls:""},{f:"150913 Branicki Palace in Białystok - 11.jpg",c:"Das „Versailles Podlachiens”",cls:""}]
  }
 };
 
@@ -577,8 +556,8 @@ function renderMint(lang){
 }
 function renderGallery(lang){
   $("#galGrid").innerHTML=T[lang].gallery.map(g=>
-    `<figure class="${g.cls}"><div class="ph">🖼️</div>
-       <img loading="lazy" alt="${g.c}" src="${wikimedia(g.f)}" onload="this.previousElementSibling.style.display='none'" onerror="this.style.display='none'">
+    `<figure class="${g.cls}">
+       <img loading="lazy" referrerpolicy="no-referrer" alt="${g.c}" src="${wikimedia(g.f)}" onerror="this.remove()">
        <figcaption>${g.c}</figcaption></figure>`).join("");
 }
 

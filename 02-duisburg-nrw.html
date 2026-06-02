@@ -393,14 +393,7 @@ const T = {
    {tag:"Kartografia / Matematyka",h:"Projekcja Merkatora",p:"W 1569 r. Gerhard Merkator stworzył w Duisburgu odwzorowanie map, na którym wciąż opiera się nawigacja i GPS."},
    {tag:"Energia / Materiały",h:"Zielona stal & wodór",p:"Kolebka stali przechodzi transformację: produkcja stali z użyciem wodoru zamiast węgla."}
   ],
-  gallery:[
-   {f:"Landschaftspark Duisburg-Nord 2016.jpg",c:"Landschaftspark Duisburg-Nord",cls:"wide"},
-   {f:"Tiger and Turtle.jpg",c:"Tiger & Turtle",cls:""},
-   {f:"Innenhafen Duisburg.jpg",c:"Innenhafen",cls:"tall"},
-   {f:"Duisburg Hafen.jpg",c:"Port w Duisburgu",cls:""},
-   {f:"Duisburg, Rheinorange.jpg",c:"Rheinorange nad Renem",cls:""},
-   {f:"Gerhard Mercator.jpg",c:"Gerhard Merkator",cls:"wide"}
-  ]
+  gallery:[{f:"Landschaftspark Duisburg-Nord - Haupteingang.JPG",c:"Landschaftspark Duisburg-Nord",cls:""},{f:"Luftaufnahme Duisburg Landschaftspark Nord.JPG",c:"Dawna huta z lotu ptaka",cls:""},{f:"0040 innenhafen duisburg.JPG",c:"Innenhafen — stary port",cls:""},{f:"0046 innenhafen duisburg.jpg",c:"Nad wodą w Innenhafen",cls:""}]
  },
 
  en:{
@@ -463,14 +456,7 @@ const T = {
    {tag:"Cartography / Maths",h:"The Mercator projection",p:"In 1569 Gerhard Mercator created in Duisburg the map projection that still underpins navigation and GPS."},
    {tag:"Energy / Materials",h:"Green steel & hydrogen",p:"The cradle of steel is transforming: making steel with hydrogen instead of coal."}
   ],
-  gallery:[
-   {f:"Landschaftspark Duisburg-Nord 2016.jpg",c:"Landschaftspark Duisburg-Nord",cls:"wide"},
-   {f:"Tiger and Turtle.jpg",c:"Tiger & Turtle",cls:""},
-   {f:"Innenhafen Duisburg.jpg",c:"Innenhafen",cls:"tall"},
-   {f:"Duisburg Hafen.jpg",c:"Duisburg port",cls:""},
-   {f:"Duisburg, Rheinorange.jpg",c:"Rheinorange by the Rhine",cls:""},
-   {f:"Gerhard Mercator.jpg",c:"Gerhard Mercator",cls:"wide"}
-  ]
+  gallery:[{f:"Landschaftspark Duisburg-Nord - Haupteingang.JPG",c:"Landschaftspark Duisburg-Nord",cls:""},{f:"Luftaufnahme Duisburg Landschaftspark Nord.JPG",c:"The old ironworks from above",cls:""},{f:"0040 innenhafen duisburg.JPG",c:"Innenhafen — the inner harbour",cls:""},{f:"0046 innenhafen duisburg.jpg",c:"Waterside at the Innenhafen",cls:""}]
  },
 
  de:{
@@ -533,14 +519,7 @@ const T = {
    {tag:"Kartografie / Mathematik",h:"Mercator-Projektion",p:"1569 schuf Gerhard Mercator in Duisburg die Kartenprojektion, auf der bis heute Navigation und GPS beruhen."},
    {tag:"Energie / Werkstoffe",h:"Grüner Stahl & Wasserstoff",p:"Die Wiege des Stahls wandelt sich: Stahl wird mit Wasserstoff statt Kohle erzeugt."}
   ],
-  gallery:[
-   {f:"Landschaftspark Duisburg-Nord 2016.jpg",c:"Landschaftspark Duisburg-Nord",cls:"wide"},
-   {f:"Tiger and Turtle.jpg",c:"Tiger & Turtle",cls:""},
-   {f:"Innenhafen Duisburg.jpg",c:"Innenhafen",cls:"tall"},
-   {f:"Duisburg Hafen.jpg",c:"Duisburger Hafen",cls:""},
-   {f:"Duisburg, Rheinorange.jpg",c:"Rheinorange am Rhein",cls:""},
-   {f:"Gerhard Mercator.jpg",c:"Gerhard Mercator",cls:"wide"}
-  ]
+  gallery:[{f:"Landschaftspark Duisburg-Nord - Haupteingang.JPG",c:"Landschaftspark Duisburg-Nord",cls:""},{f:"Luftaufnahme Duisburg Landschaftspark Nord.JPG",c:"Das Hüttenwerk von oben",cls:""},{f:"0040 innenhafen duisburg.JPG",c:"Innenhafen Duisburg",cls:""},{f:"0046 innenhafen duisburg.jpg",c:"Am Wasser im Innenhafen",cls:""}]
  }
 };
 
@@ -580,8 +559,8 @@ function renderMint(lang){
 }
 function renderGallery(lang){
   $("#galGrid").innerHTML=T[lang].gallery.map(g=>
-    `<figure class="${g.cls}"><div class="ph">🖼️</div>
-       <img loading="lazy" alt="${g.c}" src="${wikimedia(g.f)}" onload="this.previousElementSibling.style.display='none'" onerror="this.style.display='none'">
+    `<figure class="${g.cls}">
+       <img loading="lazy" referrerpolicy="no-referrer" alt="${g.c}" src="${wikimedia(g.f)}" onerror="this.remove()">
        <figcaption>${g.c}</figcaption></figure>`).join("");
 }
 

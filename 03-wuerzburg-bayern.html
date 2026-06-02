@@ -392,14 +392,7 @@ const T = {
    {tag:"Inżynieria / Architektura",h:"Schody Neumanna",p:"Sklepienie nad klatką schodową Rezydencji nie ma podpór — i przetrwało nawet bombardowanie w 1945 r."},
    {tag:"Nauka / Badania",h:"Uniwersytet (JMU)",p:"Najstarszy uniwersytet Bawarii, silny w medycynie, fizyce i biologii — kilka Nagród Nobla."}
   ],
-  gallery:[
-   {f:"Würzburg Residenz.jpg",c:"Rezydencja w Würzburgu",cls:"wide"},
-   {f:"Festung Marienberg Würzburg.jpg",c:"Twierdza Marienberg",cls:""},
-   {f:"Alte Mainbrücke Würzburg.jpg",c:"Stary Most nad Menem",cls:"tall"},
-   {f:"Würzburg.jpg",c:"Panorama Würzburga",cls:""},
-   {f:"Würzburger Stein.jpg",c:"Winnice Würzburger Stein",cls:""},
-   {f:"Würzburg Dom.jpg",c:"Katedra św. Kiliana",cls:"wide"}
-  ]
+  gallery:[{f:"Würzburger Residenz, Gartenfront.jpg",c:"Rezydencja — front ogrodowy",cls:""},{f:"Würzburg panorama.JPG",c:"Panorama Würzburga",cls:""},{f:"Blick auf Festung Marienberg von der Alten Mainbrücke Würzburg aus 2022-06-25.jpg",c:"Marienberg znad Starego Mostu",cls:""},{f:"Wurzburg Marienberg Fortress on the Main in Würzburg.jpg",c:"Twierdza Marienberg nad Menem",cls:""}]
  },
 
  en:{
@@ -461,14 +454,7 @@ const T = {
    {tag:"Engineering / Architecture",h:"Neumann's staircase",p:"The Residence's vaulted staircase has no supporting pillars — and even survived the 1945 bombing."},
    {tag:"Science / Research",h:"University (JMU)",p:"Bavaria's oldest university, strong in medicine, physics and biology — home to several Nobel laureates."}
   ],
-  gallery:[
-   {f:"Würzburg Residenz.jpg",c:"The Würzburg Residence",cls:"wide"},
-   {f:"Festung Marienberg Würzburg.jpg",c:"Marienberg Fortress",cls:""},
-   {f:"Alte Mainbrücke Würzburg.jpg",c:"Old Main Bridge",cls:"tall"},
-   {f:"Würzburg.jpg",c:"Würzburg skyline",cls:""},
-   {f:"Würzburger Stein.jpg",c:"Würzburger Stein vineyards",cls:""},
-   {f:"Würzburg Dom.jpg",c:"St Kilian's Cathedral",cls:"wide"}
-  ]
+  gallery:[{f:"Würzburger Residenz, Gartenfront.jpg",c:"The Residence — garden front",cls:""},{f:"Würzburg panorama.JPG",c:"Würzburg panorama",cls:""},{f:"Blick auf Festung Marienberg von der Alten Mainbrücke Würzburg aus 2022-06-25.jpg",c:"Marienberg from the Old Bridge",cls:""},{f:"Wurzburg Marienberg Fortress on the Main in Würzburg.jpg",c:"Marienberg Fortress on the Main",cls:""}]
  },
 
  de:{
@@ -530,14 +516,7 @@ const T = {
    {tag:"Technik / Architektur",h:"Neumanns Treppenhaus",p:"Das gewölbte Treppenhaus der Residenz kommt ohne Stützpfeiler aus — und überstand sogar die Bombardierung 1945."},
    {tag:"Wissenschaft / Forschung",h:"Universität (JMU)",p:"Bayerns älteste Universität, stark in Medizin, Physik und Biologie — mit mehreren Nobelpreisträgern."}
   ],
-  gallery:[
-   {f:"Würzburg Residenz.jpg",c:"Würzburger Residenz",cls:"wide"},
-   {f:"Festung Marienberg Würzburg.jpg",c:"Festung Marienberg",cls:""},
-   {f:"Alte Mainbrücke Würzburg.jpg",c:"Alte Mainbrücke",cls:"tall"},
-   {f:"Würzburg.jpg",c:"Würzburg von oben",cls:""},
-   {f:"Würzburger Stein.jpg",c:"Weinlage Würzburger Stein",cls:""},
-   {f:"Würzburg Dom.jpg",c:"Kiliansdom",cls:"wide"}
-  ]
+  gallery:[{f:"Würzburger Residenz, Gartenfront.jpg",c:"Residenz — Gartenfront",cls:""},{f:"Würzburg panorama.JPG",c:"Würzburg-Panorama",cls:""},{f:"Blick auf Festung Marienberg von der Alten Mainbrücke Würzburg aus 2022-06-25.jpg",c:"Marienberg von der Alten Mainbrücke",cls:""},{f:"Wurzburg Marienberg Fortress on the Main in Würzburg.jpg",c:"Festung Marienberg am Main",cls:""}]
  }
 };
 
@@ -577,8 +556,8 @@ function renderMint(lang){
 }
 function renderGallery(lang){
   $("#galGrid").innerHTML=T[lang].gallery.map(g=>
-    `<figure class="${g.cls}"><div class="ph">🖼️</div>
-       <img loading="lazy" alt="${g.c}" src="${wikimedia(g.f)}" onload="this.previousElementSibling.style.display='none'" onerror="this.style.display='none'">
+    `<figure class="${g.cls}">
+       <img loading="lazy" referrerpolicy="no-referrer" alt="${g.c}" src="${wikimedia(g.f)}" onerror="this.remove()">
        <figcaption>${g.c}</figcaption></figure>`).join("");
 }
 

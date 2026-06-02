@@ -392,14 +392,7 @@ const T = {
    {tag:"Informatyka / Druk",h:"Gutenberg w Mainz",p:"Ok. 1440 r. Jan Gutenberg wynalazł w Moguncji druk ruchomą czcionką — jeden z przełomów cywilizacji."},
    {tag:"Chemia",h:"BASF w Ludwigshafen",p:"W regionie działa BASF — największy zintegrowany zakład chemiczny na świecie."}
   ],
-  gallery:[
-   {f:"Kyrburg.jpg",c:"Zamek Kyrburg",cls:"wide"},
-   {f:"Nahe (river).jpg",c:"Rzeka Nahe",cls:""},
-   {f:"Mainz Dom 2013.jpg",c:"Katedra w Mainz",cls:"tall"},
-   {f:"Weinberg Pfalz.jpg",c:"Winnice Rheinland-Pfalz",cls:""},
-   {f:"Idar-Oberstein Felsenkirche.jpg",c:"Idar-Oberstein w pobliżu",cls:""},
-   {f:"Burg Kyrburg Kirn.jpg",c:"Widok na Kirn",cls:"wide"}
-  ]
+  gallery:[{f:"Kirn - Marktplatz mit Fachwerk, Kyrburg über Kirn.JPG",c:"Rynek i zamek Kyrburg",cls:""},{f:"Kirn - Kyrburg im Herbst - 07.10.08 - panoramio.jpg",c:"Kyrburg jesienią",cls:""},{f:"Kyrburg 20171001 003.jpg",c:"Ruiny Kyrburga",cls:""},{f:"Kyrburg 20171001 005.jpg",c:"Widok z zamku",cls:""}]
  },
 
  en:{
@@ -461,14 +454,7 @@ const T = {
    {tag:"Computing / Printing",h:"Gutenberg in Mainz",p:"Around 1440 Johannes Gutenberg invented movable-type printing in Mainz — a turning point in human history."},
    {tag:"Chemistry",h:"BASF in Ludwigshafen",p:"The region is home to BASF — the largest integrated chemical complex in the world."}
   ],
-  gallery:[
-   {f:"Kyrburg.jpg",c:"Kyrburg Castle",cls:"wide"},
-   {f:"Nahe (river).jpg",c:"The river Nahe",cls:""},
-   {f:"Mainz Dom 2013.jpg",c:"Mainz Cathedral",cls:"tall"},
-   {f:"Weinberg Pfalz.jpg",c:"Vineyards of Rhineland-Palatinate",cls:""},
-   {f:"Idar-Oberstein Felsenkirche.jpg",c:"Nearby Idar-Oberstein",cls:""},
-   {f:"Burg Kyrburg Kirn.jpg",c:"View over Kirn",cls:"wide"}
-  ]
+  gallery:[{f:"Kirn - Marktplatz mit Fachwerk, Kyrburg über Kirn.JPG",c:"Market square & Kyrburg castle",cls:""},{f:"Kirn - Kyrburg im Herbst - 07.10.08 - panoramio.jpg",c:"The Kyrburg in autumn",cls:""},{f:"Kyrburg 20171001 003.jpg",c:"The Kyrburg ruins",cls:""},{f:"Kyrburg 20171001 005.jpg",c:"View from the castle",cls:""}]
  },
 
  de:{
@@ -530,14 +516,7 @@ const T = {
    {tag:"Informatik / Druck",h:"Gutenberg in Mainz",p:"Um 1440 erfand Johannes Gutenberg in Mainz den Buchdruck mit beweglichen Lettern — ein Wendepunkt der Geschichte."},
    {tag:"Chemie",h:"BASF in Ludwigshafen",p:"In der Region liegt die BASF — der größte zusammenhängende Chemiestandort der Welt."}
   ],
-  gallery:[
-   {f:"Kyrburg.jpg",c:"Kyrburg",cls:"wide"},
-   {f:"Nahe (river).jpg",c:"Der Fluss Nahe",cls:""},
-   {f:"Mainz Dom 2013.jpg",c:"Mainzer Dom",cls:"tall"},
-   {f:"Weinberg Pfalz.jpg",c:"Weinberge in Rheinland-Pfalz",cls:""},
-   {f:"Idar-Oberstein Felsenkirche.jpg",c:"Idar-Oberstein in der Nähe",cls:""},
-   {f:"Burg Kyrburg Kirn.jpg",c:"Blick über Kirn",cls:"wide"}
-  ]
+  gallery:[{f:"Kirn - Marktplatz mit Fachwerk, Kyrburg über Kirn.JPG",c:"Marktplatz & Kyrburg",cls:""},{f:"Kirn - Kyrburg im Herbst - 07.10.08 - panoramio.jpg",c:"Kyrburg im Herbst",cls:""},{f:"Kyrburg 20171001 003.jpg",c:"Ruine Kyrburg",cls:""},{f:"Kyrburg 20171001 005.jpg",c:"Blick von der Burg",cls:""}]
  }
 };
 
@@ -577,8 +556,8 @@ function renderMint(lang){
 }
 function renderGallery(lang){
   $("#galGrid").innerHTML=T[lang].gallery.map(g=>
-    `<figure class="${g.cls}"><div class="ph">🖼️</div>
-       <img loading="lazy" alt="${g.c}" src="${wikimedia(g.f)}" onload="this.previousElementSibling.style.display='none'" onerror="this.style.display='none'">
+    `<figure class="${g.cls}">
+       <img loading="lazy" referrerpolicy="no-referrer" alt="${g.c}" src="${wikimedia(g.f)}" onerror="this.remove()">
        <figcaption>${g.c}</figcaption></figure>`).join("");
 }
 

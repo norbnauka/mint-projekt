@@ -393,14 +393,7 @@ const T = {
    {tag:"Chemia / Przemysł",h:"Trójkąt chemiczny",p:"Leuna, Buna i Bitterfeld pod Halle — od ponad 100 lat jedno z największych zagłębi chemicznych Europy."},
    {tag:"Inżynieria spożywcza",h:"Halloren — od 1804",p:"Najstarsza działająca fabryka czekolady w Niemczech. Słynne „Hallorenkugeln” to ikona miasta."}
   ],
-  gallery:[
-   {f:"Halle (Saale) Marktplatz.jpg",c:"Marktplatz w Halle",cls:"wide"},
-   {f:"Roter Turm Halle.jpg",c:"Roter Turm",cls:""},
-   {f:"Burg Giebichenstein.jpg",c:"Burg Giebichenstein",cls:"tall"},
-   {f:"Händel-Haus Halle.jpg",c:"Händel-Haus",cls:""},
-   {f:"Franckesche Stiftungen Halle.jpg",c:"Franckesche Stiftungen",cls:""},
-   {f:"Saale Halle.jpg",c:"Rzeka Saale w Halle",cls:"wide"}
-  ]
+  gallery:[{f:"Händel und seine 5 Türme - Marktplatz Halle (Saale) - Roter Turm Marktkirche - panoramio.jpg",c:"Rynek i pięć wież",cls:""},{f:"Roter Turm (Halle) 01.jpg",c:"Roter Turm (Czerwona Wieża)",cls:""},{f:"Die 5 Türme von Halle - panoramio.jpg",c:"Pięć wież Halle",cls:""},{f:"Marktplatz - Thalia, Comerzbank , HAVAG Service Center, Marktkirche, Roter Turm - Halle (Saale) - Altstadt Händelstadt - panoramio.jpg",c:"Marktplatz w sercu miasta",cls:""}]
  },
 
  en:{
@@ -463,14 +456,7 @@ const T = {
    {tag:"Chemistry / Industry",h:"Chemical triangle",p:"Leuna, Buna and Bitterfeld near Halle — for over 100 years one of Europe's largest chemical industry hubs."},
    {tag:"Food engineering",h:"Halloren — since 1804",p:"Germany's oldest still-operating chocolate factory. The famous „Halloren chocolate balls” are a city icon."}
   ],
-  gallery:[
-   {f:"Halle (Saale) Marktplatz.jpg",c:"Halle Market Square",cls:"wide"},
-   {f:"Roter Turm Halle.jpg",c:"The Red Tower",cls:""},
-   {f:"Burg Giebichenstein.jpg",c:"Burg Giebichenstein",cls:"tall"},
-   {f:"Händel-Haus Halle.jpg",c:"Handel House",cls:""},
-   {f:"Franckesche Stiftungen Halle.jpg",c:"Francke Foundations",cls:""},
-   {f:"Saale Halle.jpg",c:"The Saale in Halle",cls:"wide"}
-  ]
+  gallery:[{f:"Händel und seine 5 Türme - Marktplatz Halle (Saale) - Roter Turm Marktkirche - panoramio.jpg",c:"Market square & the five towers",cls:""},{f:"Roter Turm (Halle) 01.jpg",c:"The Red Tower (Roter Turm)",cls:""},{f:"Die 5 Türme von Halle - panoramio.jpg",c:"The five towers of Halle",cls:""},{f:"Marktplatz - Thalia, Comerzbank , HAVAG Service Center, Marktkirche, Roter Turm - Halle (Saale) - Altstadt Händelstadt - panoramio.jpg",c:"Marktplatz in the city centre",cls:""}]
  },
 
  de:{
@@ -533,14 +519,7 @@ const T = {
    {tag:"Chemie / Industrie",h:"Chemiedreieck",p:"Leuna, Buna und Bitterfeld bei Halle — seit über 100 Jahren eines der größten Chemiezentren Europas."},
    {tag:"Lebensmittelchemie",h:"Halloren — seit 1804",p:"Die älteste noch produzierende Schokoladenfabrik Deutschlands. Die „Hallorenkugeln” sind eine Ikone der Stadt."}
   ],
-  gallery:[
-   {f:"Halle (Saale) Marktplatz.jpg",c:"Marktplatz in Halle",cls:"wide"},
-   {f:"Roter Turm Halle.jpg",c:"Roter Turm",cls:""},
-   {f:"Burg Giebichenstein.jpg",c:"Burg Giebichenstein",cls:"tall"},
-   {f:"Händel-Haus Halle.jpg",c:"Händel-Haus",cls:""},
-   {f:"Franckesche Stiftungen Halle.jpg",c:"Franckesche Stiftungen",cls:""},
-   {f:"Saale Halle.jpg",c:"Die Saale in Halle",cls:"wide"}
-  ]
+  gallery:[{f:"Händel und seine 5 Türme - Marktplatz Halle (Saale) - Roter Turm Marktkirche - panoramio.jpg",c:"Marktplatz & die fünf Türme",cls:""},{f:"Roter Turm (Halle) 01.jpg",c:"Roter Turm",cls:""},{f:"Die 5 Türme von Halle - panoramio.jpg",c:"Die fünf Türme von Halle",cls:""},{f:"Marktplatz - Thalia, Comerzbank , HAVAG Service Center, Marktkirche, Roter Turm - Halle (Saale) - Altstadt Händelstadt - panoramio.jpg",c:"Marktplatz im Zentrum",cls:""}]
  }
 };
 
@@ -580,8 +559,8 @@ function renderMint(lang){
 }
 function renderGallery(lang){
   $("#galGrid").innerHTML=T[lang].gallery.map(g=>
-    `<figure class="${g.cls}"><div class="ph">🖼️</div>
-       <img loading="lazy" alt="${g.c}" src="${wikimedia(g.f)}" onload="this.previousElementSibling.style.display='none'" onerror="this.style.display='none'">
+    `<figure class="${g.cls}">
+       <img loading="lazy" referrerpolicy="no-referrer" alt="${g.c}" src="${wikimedia(g.f)}" onerror="this.remove()">
        <figcaption>${g.c}</figcaption></figure>`).join("");
 }
 
